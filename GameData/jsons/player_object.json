@@ -1,0 +1,7 @@
+{
+"object_directory"	: "./GameData/GameObjects/", 
+"object_file"		: "player_object.py",
+"object_class"		: "PlayerObject",
+"object_category"	: "Player"	
+}
+

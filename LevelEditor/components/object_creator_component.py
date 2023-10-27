@@ -1,0 +1,92 @@
+import json
+import sys
+import os
+
+
+''' Hungarian notation
+l = list()
+d = dict()
+s = str()
+i = int()
+'''
+'''
+ObjectCreator Intended Use:
+The object creators ultimate goal is to create a list called l_categories.
+This is a multidimensional list containing categories of different objects.
+This list should make the traversal of objects and categories easy and is needed for 
+the level editor. The level editor will use list l_categories and indicies i_category and i_object
+to traverse l_categories.
+
+example of what l_categories will look like
+
+l_categories = 	[
+
+		[object_1,category_1],[object_2,category_1],[object_3,category_1],
+
+		[object_1,category_2],[object_2,category_2],[object_3,category_2],
+
+		[object_1,category_3],[object_2,category_3],[object_3,category_3],
+
+		]
+
+
+'''
+class ObjectCreatorComponent:
+
+	def __init__(self):
+		self.l_json_modules = list()
+		self.l_objects = list()
+		self.d_modules = {}
+		self.s_directory_path = './'
+		self.l_categories = list()
+		self.i_category = 0
+		self.i_object = 0
+
+	def create_json_list(self):
+		for root, dirs, files in os.walk(self.s_directory_path):
+			for json_file in files:
+				file_extension = os.path.splitext(json_file)[1]
+				if file_extension.lower() == '.json':
+					self.l_json_modules.append(os.path.join(root,json_file))
+					
+	def create_objects_dict(self):	
+		for json_module in self.l_json_modules:
+		
+			with open(json_module,'r') as json_file:
+				module_data = json.load(json_file)
+			try:
+				sys.path.append(module_data['object_directory'])
+				module_name = module_data['object_file'].rstrip(".py")
+				category = module_data['object_category']
+				self.d_modules[module_name] = __import__(module_name)
+				self.l_objects.append([self.d_modules[module_name].create_object(),module_name,category])
+	
+			except Exception as Error:
+				print("unable to create object: ", Error)
+
+	def organize_objects(self):
+		i = 0
+		A = self.l_objects
+		while i < len(A):
+			temp_list = list()
+			temp_list.append([A[i][0],A[i][1]])
+			k = i + 1
+			while k < len(A):
+				if A[i][2] == A[k][2]:
+					temp_list.append([A[k][0],A[k][1]]) 
+					A.remove(A[k])
+				k += 1
+			self.l_categories.append(temp_list)
+			i += 1
+
+
+	def reset(self):
+		self.l_json_modules = list()
+		self.l_objects = list()
+		self.d_modules = {}
+		self.s_directory_path = './'
+		self.l_categories = list()
+
+
+
+
