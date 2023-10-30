@@ -6,7 +6,7 @@ class PlayerEngine:
     def __init__(self):
         self.player_walking_force = 20000
         self.thrust_force = 10000
-    def main(self,**kwargs):
+    def update(self,**kwargs):
         player_object = kwargs['PlayerObject']
         input_dict = kwargs['InputDict']
         self.x_movement(player_object,input_dict)
