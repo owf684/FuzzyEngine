@@ -7,12 +7,11 @@ class InputsEngine:
         self.hold_create = False
         self.horizontal = 0
         self.vertical = 0
-
         self.input_dict = {
             "vertical": 0,
             "horizontal" : 0,
-            "left-cli"	: 0,
-            "right-click" 	: 0,
+            "left-click"	: True,
+            "right-click" 	: False,
             "create-level" 	: 0,
             "patch-lev"	: 0,
             "load-lev"	: 0,
@@ -20,9 +19,15 @@ class InputsEngine:
             "arrow-hori"	: 0,
             "l_shift"		: 0,
             "edit"    		: 0,
-            "attack"		: 0
+            "attack"		: 0,
+
+            "arrow_vert_latch" : False,
+            "arrow_hori_latch" : False,
+            "left_click_latch" : False,
+            "right_click_latch": False
         }
-    def main(self):
+ 
+    def update(self):
         keys = pygame.key.get_pressed()
 
         # update player position based on key states
