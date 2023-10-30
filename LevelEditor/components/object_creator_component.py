@@ -41,7 +41,9 @@ class ObjectCreatorComponent:
 		self.l_categories = list()
 		self.i_category = 0
 		self.i_object = 0
-
+		self.update_editor_ui = False
+		self.l_attributes = list()
+		self.l_previous_attributes = list()
 	def create_json_list(self):
 		for root, dirs, files in os.walk(self.s_directory_path):
 			for json_file in files:
@@ -79,6 +81,36 @@ class ObjectCreatorComponent:
 			self.l_categories.append(temp_list)
 			i += 1
 
+	def category_handler(self,d_inputs):
+		if d_inputs["arrow_vert_latch"] or d_inputs["arrow_hori_latch"]:
+			self.update_editor_ui = True
+			
+		if d_inputs['arrow-vert'] == 1 and not d_inputs["arrow_vert_latch"]:
+			d_inputs["arrow_vert_latch"] = True
+			self.i_category += 1
+		elif d_inputs['arrow-vert'] == -1 and not d_inputs["arrow_vert_latch"]:
+			d_inputs["arrow_vert_latch"] = True
+			self.i_category -= 1
+		elif d_inputs['arrow-vert'] == 0 and d_inputs["arrow_vert_latch"]:
+			d_inputs["arrow_vert_latch"] = False
+		if d_inputs['arrow-hori'] == 1 and not d_inputs["arrow_hori_latch"]:
+			d_inputs["arrow_hori_latch"] = True
+			self.i_object += 1		
+		elif d_inputs['arrow-hori'] == -1 and not d_inputs["arrow_hori_latch"]:
+			d_inputs["arrow_hori_latch"] = True
+			self.i_object -= 1
+		elif d_inputs['arrow-hori'] == 0 and d_inputs["arrow_hori_latch"]:
+			d_inputs["arrow_hori_latch"] = False
+                
+		if self.i_category >= len(self.l_categories):
+			self.i_category = len(self.l_categories) -1
+		elif self.i_category < 0:
+			self.i_category = 0
+
+		if self.i_object >= len(self.l_categories[self.i_category]):
+			self.i_object = len(self.l_categories[self.i_category]) -1
+		elif self.i_object < 0:
+			self.i_object = 0
 
 	def reset(self):
 		self.l_json_modules = list()
@@ -87,6 +119,29 @@ class ObjectCreatorComponent:
 		self.s_directory_path = './'
 		self.l_categories = list()
 
+	def get_selected_category(self):
+		return self.l_categories[self.i_category]
+	
+	def get_selected_object(self):
+		return self.l_categories[self.i_category][self.i_object]
+	
+	def create_selected_object(self):
+		module_name = self.l_categories[self.i_category][self.i_object]
+		return self.d_modules[module_name].create_object() 
 
+
+	def generate_attribute_list(self,attr_list):
+		
+		##refine attr list
+		for key, value in attr_list.items():
+			self.l_attributes.append([key,value])
+		return
+		
+	def create_attribute_list(self,selected_object):
+		self.l_attributes.clear()
+		try:
+			self.generate_attribute_list(vars(selected_object))
+		except Exception as Error:
+			print(selected_object, Error)
 
 
