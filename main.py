@@ -8,12 +8,14 @@ sys.path.append("./PhysicsEngine")
 sys.path.append("./PlayerEngine")
 sys.path.append('./GameData/GameObjects')
 sys.path.append("./LevelEditor")
+sys.path.append("./SpriteEngine")
 import input_engine
 import graphics_engine
 import player_object
 import physics_engine
 import player_engine
 import level_editor
+import sprite_engine
 
 
 '''Hungarian Notation
@@ -26,15 +28,11 @@ e_graphics = graphics_engine.GraphicsEngine()
 e_physics = physics_engine.PhysicsEngine()
 e_player = player_engine.PlayerEngine() 
 e_level_editor = level_editor.LevelEditor()
-l_editor_ui_elements = list()
+e_sprite = sprite_engine.SpriteEngine()
 
 l_game_objects = list()
 o_player = player_object.PlayerObject()
 l_game_objects.append(o_player)
-
-
-
-
 
 # Start clock
 clock = pygame.time.Clock()
@@ -53,15 +51,19 @@ while running:
     if event.type == pygame.QUIT:
       running = False
 
-  input_dict = e_inputs.main()
+  input_dict = e_inputs.update()
   
-  e_graphics.main(GameObjectsList=l_game_objects,UIList=l_editor_ui_elements)
+  e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
 
-  for objects in e_graphics.render_buffer:
-    e_physics.main(GameObject=objects,DeltaT=delta_t)
-  e_player.main(InputDict=input_dict,PlayerObject=o_player)
+  if not e_level_editor.edit:
+    
+    for objects in e_graphics.render_buffer:
+      e_physics.update(GameObject=objects,DeltaT=delta_t)
+      e_sprite.update(GameObject=objects)
 
-  l_editor_ui_elements = e_level_editor.main(InputDict=input_dict,RenderBuffer=e_graphics.render_buffer)
+    e_player.update(InputDict=input_dict,PlayerObject=o_player)
+
+  e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects)
   delta_t = clock.tick(FPS)/1000
  
 pygame.quit()
