@@ -10,7 +10,7 @@ class BrickObject(game_object.GameObject):
 
         self.current_sprite.create_sprite('./GameData/Assets/Environment/brick.png')
 
-
+        self.physics.pause = True
 
 def create_object():
     return BrickObject()
