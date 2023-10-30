@@ -83,4 +83,3 @@ class PhysicsComponent:
     self.calculate_force(gravity)
     self.calculate_velocity(delta_t)
     self.calculate_position(delta_t)      
-    return self.position()
