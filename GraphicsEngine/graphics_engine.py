@@ -48,14 +48,15 @@ class GraphicsEngine:
         #draw level editor
         if e_level_editor.edit:
             e_level_editor.grid.draw_grid(self.screen)
-            self.draw_object_editor_ui(e_level_editor.object_editor_ui.l_object_editor_ui_elements)
+            e_level_editor.object_container_ui.draw_object_containers(self.screen)
 
+        e_level_editor.tool_bar.draw_toolbar(self.screen) 
 
-        e_level_editor.tool_bar.draw_attributes(self.screen)    
-        self.draw_button_ui(e_level_editor.l_button_ui_elements)
-
-
-
+        e_level_editor.attribute_ui.draw_attributes(self.screen)
+        
+        for key, button in e_level_editor.l_button_ui_elements.items():
+            button.draw_button(self.screen)
+  
         pygame.display.flip()
 
 
@@ -80,37 +81,4 @@ class GraphicsEngine:
       for objects in self.render_buffer:
             self.screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
 
-    # rule to remember ui elements can display all 5 sprites at once                
-    def draw_object_editor_ui(self,l_ui_elements):
-
-        for objects in l_ui_elements:
-            #draw generic sprite 1
-            if objects.generic_sprite_1.image is not None:
-
-                self.screen.blit(objects.generic_sprite_1.image,(objects.generic_sprite_1.position.x,objects.generic_sprite_1.position.y))
-
-            #draw generic sprite 2
-            if objects.generic_sprite_2.image is not None:
-
-                self.screen.blit(objects.generic_sprite_2.image,(objects.generic_sprite_2.position.x,objects.generic_sprite_2.position.y))
-
-            #draw generic sprite 3
-            if objects.generic_sprite_3.image is not None:
-
-                self.screen.blit(objects.generic_sprite_3.image,(objects.generic_sprite_3.position.x,objects.generic_sprite_3.position.y))
-
-            #draw generic sprite 4
-            if objects.generic_sprite_4.image is not None:
-
-                self.screen.blit(objects.generic_sprite_4.image,(objects.generic_sprite_4.position.x,objects.generic_sprite_4.position.y))
-
-            #draw current sprite
-            if objects.current_sprite.image is not None:
-
-                self.screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
-
-    def draw_button_ui(self,l_ui_elements):
-        for key, button in l_ui_elements.items():
-            if len(button.sprite.sprite_sheet)>0:
-                if button.sprite.sprite_sheet[button.sprite.animation_state] is not None:
-                    self.screen.blit(button.sprite.sprite_sheet[button.sprite.animation_state],(button.sprite.position.x,button.sprite.position.y))
+    
