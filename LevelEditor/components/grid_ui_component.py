@@ -2,7 +2,7 @@
 import pygame
 
 
-class GridComponent:
+class GridUIComponent:
 
     def __init__(self):
         self.display_info = pygame.display.Info()
