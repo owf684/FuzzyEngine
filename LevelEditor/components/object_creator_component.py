@@ -42,8 +42,7 @@ class ObjectCreatorComponent:
 		self.i_category = 0
 		self.i_object = 0
 		self.update_editor_ui = False
-		self.l_attributes = list()
-		self.l_previous_attributes = list()
+
 	def create_json_list(self):
 		for root, dirs, files in os.walk(self.s_directory_path):
 			for json_file in files:
@@ -126,22 +125,10 @@ class ObjectCreatorComponent:
 		return self.l_categories[self.i_category][self.i_object]
 	
 	def create_selected_object(self):
-		module_name = self.l_categories[self.i_category][self.i_object]
+		module_name = self.l_categories[self.i_category][self.i_object][1]
 		return self.d_modules[module_name].create_object() 
 
 
-	def generate_attribute_list(self,attr_list):
-		
-		##refine attr list
-		for key, value in attr_list.items():
-			self.l_attributes.append([key,value])
-		return
-		
-	def create_attribute_list(self,selected_object):
-		self.l_attributes.clear()
-		try:
-			self.generate_attribute_list(vars(selected_object))
-		except Exception as Error:
-			print(selected_object, Error)
+
 
 
