@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-class ObjectEditorUIComponent:
+class ObjectContainerUIComponent:
 
     def __init__(self):
         self.l_object_editor_ui_elements = list()
@@ -37,7 +37,35 @@ class ObjectEditorUIComponent:
                 x_position += 64
                 self.l_object_editor_ui_elements.append(objects[0])
                 c_object_creator.update_editor_ui = True
-        
+
+    def draw_object_containers(self,screen):
+
+      for objects in self.l_object_editor_ui_elements:
+            #draw generic sprite 1
+            if objects.generic_sprite_1.image is not None:
+
+                screen.blit(objects.generic_sprite_1.image,(objects.generic_sprite_1.position.x,objects.generic_sprite_1.position.y))
+
+            #draw generic sprite 2
+            if objects.generic_sprite_2.image is not None:
+
+                screen.blit(objects.generic_sprite_2.image,(objects.generic_sprite_2.position.x,objects.generic_sprite_2.position.y))
+
+            #draw generic sprite 3
+            if objects.generic_sprite_3.image is not None:
+
+                screen.blit(objects.generic_sprite_3.image,(objects.generic_sprite_3.position.x,objects.generic_sprite_3.position.y))
+
+            #draw generic sprite 4
+            if objects.generic_sprite_4.image is not None:
+
+                screen.blit(objects.generic_sprite_4.image,(objects.generic_sprite_4.position.x,objects.generic_sprite_4.position.y))
+
+            #draw current sprite
+            if objects.current_sprite.image is not None:
+
+                screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
+  
     def update_object_container_ui(self,c_object_creator):
         if c_object_creator.update_editor_ui:
 
