@@ -9,6 +9,7 @@ import grid_ui_component
 import tool_bar_ui_component
 import attribute_ui_component
 import object_placer_component 
+import text_box_ui_component
 from vector import Vector
 class LevelEditor:
 
@@ -48,6 +49,11 @@ class LevelEditor:
         # setup object place
         self.object_placer = object_placer_component.ObjectPlacerComponent()
 
+        #setup a text boxt
+        self.text_box_ui = text_box_ui_component.TextBoxUIComponent()
+        self.text_box = text_box_ui_component.TextBox(100,100,Vector(300,300))
+        self.text_box_ui.l_text_boxes.append(self.text_box)
+
         self.selected_object = None
         self.edit = True
 
@@ -67,6 +73,8 @@ class LevelEditor:
 
         self.object_placer.update(InputDict=d_inputs,GameObjects=game_objects,ALevelEditor=self)
    
+        self.text_box_ui.get_input()
+
     def setup_button_ui(self):
         # create sprite sheets
         self.play_pause_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/play_pause.png",4,Vector(64,64))

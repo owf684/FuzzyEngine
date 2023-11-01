@@ -57,6 +57,10 @@ class GraphicsEngine:
         for key, button in e_level_editor.l_button_ui_elements.items():
             button.draw_button(self.screen)
   
+        for text_box in e_level_editor.text_box_ui.l_text_boxes:
+            text_box.draw_text_box(self.screen)
+            
+
         pygame.display.flip()
 
 
