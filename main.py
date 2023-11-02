@@ -50,7 +50,10 @@ while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
-
+    if event.type == pygame.TEXTINPUT:
+      e_level_editor.text_box_ui.event = event
+    if event.type == pygame.KEYDOWN:
+      e_level_editor.text_box_ui.event = event
   input_dict = e_inputs.update()
   
   e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)

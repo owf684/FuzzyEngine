@@ -1,5 +1,6 @@
 import pygame
 import sys
+import pygame.freetype as freetype
 sys.path.append("./Objects/components")
 from vector import Vector
 
@@ -14,13 +15,8 @@ class TextBoxUIComponent:
 
         self.l_text_boxes = list()
         self.selected_text_box = None
-        self.PRINT_EVENT = True
-        self.ChatList= []
-        self._IMEEditing = False
-        self._IMEText = ""
-        self._IMETextPos = 0
-        self._IMEEditingText = ""
-        self._IMEEditingPos = 0
+        self.input_text = ''
+        self.event = None
 
     def get_input(self):
         mouse_position = pygame.mouse.get_pos()
@@ -32,65 +28,35 @@ class TextBoxUIComponent:
                             self.selected_text_box.selected = False
                         text_box.selected = True
                         self.selected_text_box = text_box
+                        self.input_text = self.selected_text_box.userInput
+        self.handle_input_events()
 
-        self.IMETEXT()
-        print(self._IMEText)
-    def IMETEXT(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return
+    def handle_input_events(self):
+        if self.event is None:
+            return
+    
+        if self.selected_text_box is not None:
 
-            elif event.type == pygame.KEYDOWN:
+            match self.event.type:
+        
+                case pygame.TEXTINPUT:
+    
+                    self.input_text += self.event.text
 
-                if self._IMEEditing:
-                    if len(self._IMEEditingText) == 0:
-                        self._IMEEditing = False
-                    continue
+                case pygame.KEYDOWN:
 
-                if event.key == pygame.K_BACKSPACE:
-                    if len(self._IMEText) > 0 and self._IMETextPos > 0:
-                        self._IMEText = (
-                            self._IMEText[0 : self._IMETextPos - 1] + self._IMEText[self._IMETextPos:]
-                        )
-                        self._IMETextPos = max(0, self._IMETextPos - 1)
+                    match self.event.key:
 
-                elif event.key == pygame.K_DELETE:
-                    self._IMEText = self._IMEText[0:self._IMETextPos] + self._IMEText[self._IMETextPos + 1 :]
-                elif event.key == pygame.K_LEFT:
-                    self._IMETextPos = max(0, self._IMETextPos - 1)
-                elif event.key == pygame.K_RIGHT:
-                    self._IMETextPos = min(len(self._IMEText), self._IMETextPos + 1)
+                        case pygame.K_BACKSPACE:
+                            self.input_text = self.input_text[:len(self.input_text)-1]
+            self.selected_text_box.userInput = self.input_text
+        # clear event or else it'll keep adding the same key
+        self.event = None
 
-                elif (
-                    event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]
-                    and len(event.unicode) == 0
-                ):
-                    # Block if we have no text to append
-                    if len(self._IMEText) == 0:
-                        continue
+        self.read_input()
+    def read_input(self):
 
-                    # Append chat list
-                    ChatList.append(self._IMEText)
-                    if len(ChatList) > CHATLIST_MAXSIZE:
-                        ChatList.pop(0)
-                    self._IMEText = ""
-                    self._IMETextPos = 0
-
-            elif event.type == pygame.TEXTEDITING:
-                if self.PRINT_EVENT:
-                    print(event)
-                self._IMEEditing = True
-                self._IMEEditingText = event.text
-                self._IMEEditingPos = event.start
-
-            elif event.type == pygame.TEXTINPUT:
-                if self.PRINT_EVENT:
-                    print(event)
-                self._IMEEditing = False
-                self._IMEEditingText = ""
-                self._IMEText = self._IMEText[0:self._IMETextPos] + event.text + self._IMEText[self._IMETextPos:]
-                self._IMETextPos += len(event.text)
+        print(self.input_text)
 
 
 class TextBox:
@@ -102,9 +68,22 @@ class TextBox:
         self.userInput = ''
         self.selected = False
         self.rect = pygame.Rect(self.position.x,self.position.y,self.width,self.height)
+        self.font_names = [
+        "notosanscjktcregular",
+        "notosansmonocjktcregular",
+        "notosansregular,",
+        "microsoftjhengheimicrosoftjhengheiuilight",
+        "microsoftyaheimicrosoftyaheiuilight",
+        "msgothicmsuigothicmspgothic",
+        "msmincho",
+        "Arial",
+        ]
+        self.font_small = freetype.SysFont(self.font_names, 12)
+
         pygame.key.start_text_input()
         pygame.key.set_text_input_rect(self.rect)
     def draw_text_box(self,screen):
-        pygame.draw.rect(screen,(255,0,0),self.rect,2)
+        pygame.draw.rect(screen,(255,255,255),self.rect)
+        self.font_small.render_to(screen, self.rect, self.userInput, (0,0,0))
 
 
