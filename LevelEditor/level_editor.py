@@ -51,11 +51,9 @@ class LevelEditor:
 
         #setup a text boxt
         self.text_box_ui = text_box_ui_component.TextBoxUIComponent()
-        self.text_box = text_box_ui_component.TextBox(100,100,Vector(300,300))
-        self.text_box2 = text_box_ui_component.TextBox(100,100,Vector(600,600))
+   
+        self.attribute_ui.l_text_boxes = self.text_box_ui.l_text_boxes
 
-        self.text_box_ui.l_text_boxes.append(self.text_box)
-        self.text_box_ui.l_text_boxes.append(self.text_box2)
 
         self.selected_object = None
         self.edit = True
