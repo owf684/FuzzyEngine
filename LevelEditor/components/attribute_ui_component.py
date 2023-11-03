@@ -2,6 +2,7 @@ import sys
 import pygame
 sys.path.append("./Objects/components")
 from vector import Vector
+import text_box_ui_component
 
 class AttributeUIComponent:
 
@@ -24,7 +25,7 @@ class AttributeUIComponent:
         self.l_previous_attributes = list()
         self.l_attribute_components = list()
         self.l_previous_attribute_components = list()
-
+        self.l_text_boxes = list()
         self.selected_object = None
 
     def draw_attributes(self,screen):
@@ -103,11 +104,20 @@ class AttributeUIComponent:
             self.l_previous_attributes.append(self.l_attributes.copy())
             self.create_attribute_list(attr.attr_data[1])
             self.create_attribute_component_list()
+            self.l_text_boxes.clear()
+        elif not isinstance(attr.attr_data[1], bool):
+
+            textBox = text_box_ui_component.TextBox(100,attr.value_image.get_height(),Vector(attr.position.x+attr.x_spacing,attr.position.y))
+            textBox.linked_attr = attr
+
+            self.l_text_boxes.append(textBox)
 
     def restore_attribute_components(self):
         if len(self.l_previous_attribute_components) > 0:
             self.l_attribute_components = self.l_previous_attribute_components.pop()
             self.l_attributes = self.l_previous_attributes.pop()
+            self.l_text_boxes.clear()
+            
 
 
 class AttributeComponent:
@@ -127,7 +137,7 @@ class AttributeComponent:
         self.select_color = (0,50,225)    
         self.x_spacing = 125
         self.y_increment = 25
-
+    
     def create_attribute(self,attr, position):
         self.attr_data = attr
         self.position = position
