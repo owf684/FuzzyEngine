@@ -6,8 +6,10 @@ class GridUIComponent:
 
     def __init__(self):
         self.display_info = pygame.display.Info()
-        self.screen_width = 1536
-        self.screen_height = 769
+        #self.screen_width = 1536
+        #self.screen_height = 769
+        self.screen_width = self.display_info.current_w*0.8
+        self.screen_height = self.display_info.current_h*0.8 - 10
 
         self.max_screen_width = self.screen_width
         self.scroll_offset = 0

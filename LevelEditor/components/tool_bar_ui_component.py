@@ -12,7 +12,7 @@ class ToolBarUIComponent:
         
         self.tool_bar_color = (30,30,30)
         self.tool_bar_size = Vector(400,self.display_height + 200) 
-        self.tool_bar_position = Vector(self.display_width-5,0)
+        self.tool_bar_position = Vector(self.display_width,0)
 
     
     def draw_toolbar(self,screen):

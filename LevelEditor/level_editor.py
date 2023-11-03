@@ -83,10 +83,10 @@ class LevelEditor:
         self.back_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/back_button.png",2,Vector(32,32))
    
         # setup positions
-        self.play_pause_position = Vector(self.screen_width+100,25)
-        self.play_pause_button.sprite.position.x = self.screen_width + 100
+        self.play_pause_position = Vector(self.screen_width,25)
+        self.play_pause_button.sprite.position.x = self.screen_width
         self.play_pause_button.sprite.position.y = 25
-        self.add_object_button.sprite.position.x = self.screen_width + 175
+        self.add_object_button.sprite.position.x = self.screen_width + self.play_pause_button.sprite.sprite_sheet[-1].get_width() + 5
         self.add_object_button.sprite.position.y = 25
         self.back_button.sprite.position.x = self.screen_width+10
         self.back_button.sprite.position.y = 170
