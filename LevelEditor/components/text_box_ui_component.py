@@ -49,6 +49,13 @@ class TextBoxUIComponent:
 
                         case pygame.K_BACKSPACE:
                             self.input_text = self.input_text[:len(self.input_text)-1]
+
+                    
+                        case pygame.K_RETURN:
+                            if len(self.selected_text_box.userInput) > 0:
+                                self.selected_text_box.linked_attr.attr_data[1] = float(self.selected_text_box.userInput)
+                                self.l_text_boxes.remove(self.selected_text_box)
+
             self.selected_text_box.userInput = self.input_text
         # clear event or else it'll keep adding the same key
         self.event = None
@@ -68,6 +75,7 @@ class TextBox:
         self.userInput = ''
         self.selected = False
         self.rect = pygame.Rect(self.position.x,self.position.y,self.width,self.height)
+        self.linked_attr = None
         self.font_names = [
         "notosanscjktcregular",
         "notosansmonocjktcregular",
