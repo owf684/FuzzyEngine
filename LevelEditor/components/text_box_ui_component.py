@@ -14,6 +14,7 @@ class TextBoxUIComponent:
         pygame.key.start_text_input()
 
         self.l_text_boxes = list()
+        self.previos_attribute_components = list()
         self.selected_text_box = None
         self.input_text = ''
         self.event = None
@@ -54,6 +55,7 @@ class TextBoxUIComponent:
                         case pygame.K_RETURN:
                             if len(self.selected_text_box.userInput) > 0:
                                 self.selected_text_box.linked_attr.attr_data[1] = float(self.selected_text_box.userInput)
+                                
                                 self.l_text_boxes.remove(self.selected_text_box)
 
             self.selected_text_box.userInput = self.input_text

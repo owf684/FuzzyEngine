@@ -84,5 +84,5 @@ class GraphicsEngine:
     def draw_objects(self):
       for objects in self.render_buffer:
             self.screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
-
+            pygame.draw.rect(self.screen, (0,255,0),objects.current_sprite.rect,2)
     

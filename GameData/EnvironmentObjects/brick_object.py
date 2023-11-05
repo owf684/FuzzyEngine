@@ -1,9 +1,9 @@
 import sys
 sys.path.append('./Objects')
 sys.path.append('./Objects/components')
-import game_object
+import environment_object
 
-class BrickObject(game_object.GameObject):
+class BrickObject(environment_object.EnvironmentObject):
 
     def __init__(self):
         super().__init__()

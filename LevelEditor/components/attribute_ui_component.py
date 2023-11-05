@@ -114,6 +114,7 @@ class AttributeUIComponent:
 
     def restore_attribute_components(self):
         if len(self.l_previous_attribute_components) > 0:
+
             self.l_attribute_components = self.l_previous_attribute_components.pop()
             self.l_attributes = self.l_previous_attributes.pop()
             self.l_text_boxes.clear()

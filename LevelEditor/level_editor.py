@@ -53,7 +53,7 @@ class LevelEditor:
         self.text_box_ui = text_box_ui_component.TextBoxUIComponent()
    
         self.attribute_ui.l_text_boxes = self.text_box_ui.l_text_boxes
-
+        self.text_box_ui.previous_attribute_components = self.attribute_ui.l_previous_attribute_components
 
         self.selected_object = None
         self.edit = True

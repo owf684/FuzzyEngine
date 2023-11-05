@@ -10,6 +10,6 @@ class PhysicsEngine:
     def update(self,**kwargs):
         game_object = kwargs['GameObject']
         delta_t = kwargs['DeltaT']
-        
+        game_object.physics.gravity = self.gravity
         if not game_object.physics.pause:
             game_object.physics.update(gravity=self.gravity,delta_t=delta_t)

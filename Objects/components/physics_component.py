@@ -18,6 +18,7 @@ class PhysicsComponent:
     self.mass = 100
     self.energy = 0
     self.pause = False
+    self.gravity = 0
 
   def calculate_force(self,gravity):
     '''
@@ -44,6 +45,9 @@ class PhysicsComponent:
       # calculate net force y on object
       self.net_force.y = -self.force.y - gravity_force - damping_force
 
+      print(self.force.y)
+      print(gravity_force)
+      print(self.net_force.y)
       # calculate accleration y
       self.acceleration.y = self.net_force.y / self.mass
 

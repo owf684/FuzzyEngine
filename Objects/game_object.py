@@ -2,6 +2,7 @@ import sys
 sys.path.append("./Objects/components")
 import sprite_component
 import physics_component
+import collider_component
 
 class GameObject:
 
@@ -14,3 +15,5 @@ class GameObject:
 
         self.physics = physics_component.PhysicsComponent()
         
+        # passing object to collider component for future use
+        self.collider = collider_component.ColliderComponent()
