@@ -63,9 +63,10 @@ while running:
   if not e_level_editor.edit:
     
     for objects in e_graphics.render_buffer:
-      e_physics.update(GameObject=objects,DeltaT=delta_t)
       e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
+      e_physics.update(GameObject=objects,DeltaT=delta_t)
       e_sprite.update(GameObject=objects)
+      
 
     e_player.update(InputDict=input_dict,PlayerObject=o_player)
 
