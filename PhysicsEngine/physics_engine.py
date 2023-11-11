@@ -3,7 +3,7 @@ class PhysicsEngine:
 
 
     def __init__(self):
-        self.gravity = -9.8*10
+        self.gravity = -9.8*30
 
 
 
@@ -65,12 +65,18 @@ class PhysicsEngine:
         game_object.physics.initial_velocity = game_object.physics.velocity() 
  
     # adjust velocity for collisions 
-        if game_object.collider.down:
+        if game_object.collider.up:
+            game_object.physics.initial_velocity.y = 100
+        if game_object.collider.down and game_object.physics.direction.y != 1:
             game_object.physics.initial_velocity.y = 0
-        if game_object.collider.right and game_object.physics.direction.x == 1:
+            game_object.physics.velocity.y = 0
+            game_object.physics.net_force.y =0
+        if game_object.collider.right:
             game_object.physics.initial_velocity.x = 0
-        if game_object.collider.left and game_object.physics.direction.x == -1:
+            game_object.physics.net_force.x = 0
+        if game_object.collider.left:
             game_object.physics.initial_velocity.x = 0
+            game_object.physics.net_force.x = 0
 
 
     def calculate_position(self, game_object,delta_t):
