@@ -41,7 +41,7 @@ clock = pygame.time.Clock()
 # simulation runtime variables
 pygame_events = None
 delta_t = 0
-FPS = 30
+FPS = 120
 		
 # main game loop
 running = True
@@ -65,10 +65,10 @@ while running:
     for objects in e_graphics.render_buffer:
       e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
       e_physics.update(GameObject=objects,DeltaT=delta_t)
-      e_sprite.update(GameObject=objects)
+      e_sprite.update(GameObject=objects,DeltaT=delta_t)
       
 
-    e_player.update(InputDict=input_dict,PlayerObject=o_player)
+    e_player.update(InputDict=input_dict,PlayerObject=o_player,DeltaT=delta_t)
 
   e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects)
   delta_t = clock.tick(FPS)/1000
