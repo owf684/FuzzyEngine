@@ -24,7 +24,8 @@ class InputsEngine:
             "arrow_vert_latch" : False,
             "arrow_hori_latch" : False,
             "left_click_latch" : False,
-            "right_click_latch": False
+            "right_click_latch": False,
+            "vertical_latch"   : False
         }
  
     def update(self):
