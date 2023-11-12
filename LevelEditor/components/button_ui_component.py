@@ -51,12 +51,20 @@ class ButtonUIComponent:
                     self.button_signal.send(**kwargs)
             case 'add':
                 if self.toggled:
-                    self.toggled = False   
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)   
             case 'back':
                 if self.toggled:
                     self.toggled = False 
                     self.button_signal.send(**kwargs)
-
+            case "add-scene":
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
+            case 'save-scene':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -79,6 +87,15 @@ class ButtonSignal:
 
             case 'back':
                 level_editor.attribute_ui.restore_attribute_components()
+            
+            case 'add':
+                print("add object")
+            
+            case 'add-scene':
+                print("add scene")
+
+            case 'save-scene':
+                level_editor.c_scene.b_save_scene = True
             case _:
                 None
 
