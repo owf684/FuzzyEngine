@@ -10,7 +10,7 @@ class InputsEngine:
         self.input_dict = {
             "vertical": 0,
             "horizontal" : 0,
-            "left-click"	: True,
+            "left-click"	: False,
             "right-click" 	: False,
             "create-level" 	: 0,
             "patch-lev"	: 0,
