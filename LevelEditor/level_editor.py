@@ -10,6 +10,7 @@ import tool_bar_ui_component
 import attribute_ui_component
 import object_placer_component 
 import text_box_ui_component
+import scene_component
 from vector import Vector
 class LevelEditor:
 
@@ -26,6 +27,9 @@ class LevelEditor:
         self.c_object_creator.create_objects_dict()
         self.c_object_creator.organize_objects()
 
+        # set up scene component
+        self.c_scene = scene_component.SceneComponent()
+
         # setup grid component
         self.grid = grid_ui_component.GridUIComponent()
 
@@ -40,6 +44,9 @@ class LevelEditor:
         self.play_pause_button = button_ui_component.ButtonUIComponent()
         self.back_button = button_ui_component.ButtonUIComponent()
         self.add_object_button = button_ui_component.ButtonUIComponent()
+        self.add_scene_button = button_ui_component.ButtonUIComponent()
+        self.save_scene_button = button_ui_component.ButtonUIComponent()
+
         self.l_button_ui_elements = {}
         self.setup_button_ui()
 
@@ -61,8 +68,11 @@ class LevelEditor:
     def update(self,**kwargs):
         d_inputs=kwargs['InputDict']
         game_objects = kwargs['GameObjects']
-
+        e_graphics = kwargs["GraphicsEngine"]
+        
         self.c_object_creator.category_handler(d_inputs)
+
+        self.c_scene.update(GameObjects=game_objects,GraphicsEngine=e_graphics)
 
         for key, button in self.l_button_ui_elements.items():
             button.update(Key=key,InputDict=d_inputs,ALevelEditor=self)
@@ -72,7 +82,7 @@ class LevelEditor:
 
         self.object_container_ui.update_object_container_ui(self.c_object_creator)
 
-        self.object_placer.update(InputDict=d_inputs,GameObjects=game_objects,ALevelEditor=self)
+        self.object_placer.update(InputDict=d_inputs,GameObjects=game_objects,ALevelEditor=self,GraphicsEngine=e_graphics)
    
         self.text_box_ui.get_input()
 
@@ -81,7 +91,9 @@ class LevelEditor:
         self.play_pause_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/play_pause.png",4,Vector(64,64))
         self.add_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/add_button.png",2,Vector(64,64))
         self.back_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/back_button.png",2,Vector(32,32))
-   
+        self.add_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/add_button.png",2,Vector(64,64))
+        self.save_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_button.png",2,Vector(64,64))
+
         # setup positions
         self.play_pause_position = Vector(self.screen_width,25)
         self.play_pause_button.sprite.position.x = self.screen_width
@@ -90,16 +102,23 @@ class LevelEditor:
         self.add_object_button.sprite.position.y = 25
         self.back_button.sprite.position.x = self.screen_width+10
         self.back_button.sprite.position.y = 170
-
+        self.add_scene_button.sprite.position.x = 20
+        self.add_scene_button.sprite.position.y = self.screen_height+64
+        self.save_scene_button.sprite.position.x = 20
+        self.save_scene_button.sprite.position.y = self.screen_height
         # create sprite sheet rects
         self.play_pause_button.sprite.create_sprite_sheet_rect()
         self.add_object_button.sprite.create_sprite_sheet_rect()
         self.back_button.sprite.create_sprite_sheet_rect()
+        self.add_scene_button.sprite.create_sprite_sheet_rect()
+        self.save_scene_button.sprite.create_sprite_sheet_rect()
 
         # add to ui element
         self.l_button_ui_elements = {'play':    self.play_pause_button,
                                      'add' :    self.add_object_button,
-                                     'back':    self.back_button}
+                                     'back':    self.back_button,
+                                     "add-scene": self.add_scene_button,
+                                      "save-scene": self.save_scene_button }
     
 
         
