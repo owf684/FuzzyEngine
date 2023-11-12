@@ -70,7 +70,7 @@ while running:
 
     e_player.update(InputDict=input_dict,PlayerObject=o_player,DeltaT=delta_t)
 
-  e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects)
+  e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects,GraphicsEngine=e_graphics)
   delta_t = clock.tick(FPS)/1000
  
 pygame.quit()
