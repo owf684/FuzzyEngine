@@ -3,7 +3,7 @@ class PhysicsEngine:
 
 
     def __init__(self):
-        self.gravity = -9.8*30
+        self.gravity = -9.8*50
 
 
 
