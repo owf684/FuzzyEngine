@@ -12,5 +12,6 @@ class BrickObject(environment_object.EnvironmentObject):
 
         self.physics.pause = True
 
+        self.save_state.object_json_file='brick_object.json'
 def create_object():
     return BrickObject()
