@@ -13,6 +13,7 @@ class GraphicsEngine:
         self.scan_block_size = 32
         self.scan_block_color = (255,255,255)
         self.screen = pygame.display.set_mode((self.screen_width,self.screen_height))
+    
         self.image_buffer = list()
         #render buffer
         self.render_buffer = list()
@@ -23,8 +24,8 @@ class GraphicsEngine:
         pygame.display.set_caption("Fario Faker")
 
     def update(self, **kwargs):
-        #get variables
         
+        #get variables
         e_level_editor = kwargs['LevelEditor']
         self.screen.fill((92,148,252))
 
