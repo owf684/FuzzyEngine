@@ -127,6 +127,13 @@ class ObjectCreatorComponent:
 	def create_selected_object(self):
 		module_name = self.l_categories[self.i_category][self.i_object][1]
 		return self.d_modules[module_name].create_object() 
+	
+	def create_new_object(self,json_module):
+		with open(json_module,'r') as json_file:
+			module_data = json.load(json_file)
+		module_name = module_data['object_file'].rstrip(".py")
+		module = __import__(module_name)
+		return module.create_object()
 
 
 
