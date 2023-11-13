@@ -51,9 +51,16 @@ class GraphicsEngine:
             e_level_editor.grid.draw_grid(self.screen)
             e_level_editor.object_container_ui.draw_object_containers(self.screen)
 
+        e_level_editor.tool_bar.draw_toolbar_2(self.screen)
+        e_level_editor.c_scene.draw_scene_previews(self.screen)
+       
         e_level_editor.tool_bar.draw_toolbar(self.screen) 
+        
+        
 
         e_level_editor.attribute_ui.draw_attributes(self.screen)
+        
+        
         
         for key, button in e_level_editor.l_button_ui_elements.items():
             button.draw_button(self.screen)
