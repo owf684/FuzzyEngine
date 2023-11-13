@@ -11,7 +11,7 @@ class PlayerObject(game_object.GameObject):
         self.generic_sprite_1.create_sprite('./GameData/Assets/PlayerSprites/chris.png')
 
     
-        self.save_state.object_json='./GameData/jsons/player_object.json' # needed for creating scenes. 
+        self.save_state.object_json_file='./GameData/jsons/player_object.json' # needed for creating scenes. 
         #setup some variables
         self.physics.k.x = 100
         self.physics.k.y = 0
