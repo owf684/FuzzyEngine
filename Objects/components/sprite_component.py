@@ -10,7 +10,7 @@ class SpriteComponent:
         self.image_size = Vector(0,0)
         self.position = Vector(0,0)
         self.is_rendered = False
-
+        self.sprite_path = None
         #sprite sheet
         self.sprite_sheet = list()
 
@@ -23,18 +23,22 @@ class SpriteComponent:
         self.animation_state = 0
     def create_sprite(self,sprite_path):
         try:
-
+            self.sprite_path = sprite_path
             self.image = pygame.image.load(sprite_path).convert_alpha()
             if self.image is not None:
                 self.mask = pygame.mask.from_surface(self.image)
-                self.image_size = self.image.get_size()
-                self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size[0],self.image_size[1])
+                x,y = self.image.get_size()
+                self.image_size.x = x
+                self.image_size.y = y
+
+                self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size.x,self.image_size.y)
       
         except Exception as Error:
             print("ERROR: ", Error)
 
     def create_sprite_sheet(self,sprite_path,frame_count,frame_size):
         try:
+            self.sprite_path = sprite_path
             self.sprite_sheet.clear()
             sprite_sheet = pygame.image.load(sprite_path).convert_alpha()
             for i in range(frame_count):
@@ -65,7 +69,7 @@ class SpriteComponent:
             
     def update(self,position):
         self.position = position()
-        self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size[0],self.image_size[1])
+        self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size.x,self.image_size.y)
 
 def create_object():
     return SpriteComponent()
