@@ -20,5 +20,6 @@ class ToolBarUIComponent:
 
         pygame.draw.rect(screen,self.tool_bar_color, (self.tool_bar_position.x,self.tool_bar_position.y,self.tool_bar_size.x,self.tool_bar_size.y))
     
+    def draw_toolbar_2(self,screen):
         pygame.draw.rect(screen,self.tool_bar_color, (self.tool_bar_2_position.x,self.tool_bar_2_position.y,self.tool_bar_2_size.x,self.tool_bar_2_size.y))
 
