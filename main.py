@@ -33,15 +33,14 @@ e_level_editor = level_editor.LevelEditor()
 e_sprite = sprite_engine.SpriteEngine()
 e_collision = collision_engine.CollisionEngine()
 l_game_objects = list()
-o_player = player_object.PlayerObject()
-l_game_objects.append(o_player)
+
 
 # Start clock
 clock = pygame.time.Clock()
 # simulation runtime variables
 pygame_events = None
 delta_t = 0
-FPS = 120
+FPS = 120  
 		
 # main game loop
 running = True
@@ -56,6 +55,8 @@ while running:
       e_level_editor.text_box_ui.event = event
     if event.type == pygame.KEYDOWN:
       e_level_editor.text_box_ui.event = event
+    if event.type == pygame.MOUSEWHEEL:
+      e_level_editor.c_scene.event = event
   input_dict = e_inputs.update()
   
   e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
@@ -66,9 +67,7 @@ while running:
       e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
       e_physics.update(GameObject=objects,DeltaT=delta_t)
       e_sprite.update(GameObject=objects,DeltaT=delta_t)
-      
-
-    e_player.update(InputDict=input_dict,PlayerObject=o_player,DeltaT=delta_t)
+      e_player.update(InputDict=input_dict,PlayerObject=objects,DeltaT=delta_t)
 
   e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects,GraphicsEngine=e_graphics)
   delta_t = clock.tick(FPS)/1000
