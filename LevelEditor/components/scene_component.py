@@ -102,7 +102,7 @@ class SceneComponent:
             
                 # rename directories
                 l_scenes = glob.glob(self.scene_directory+"*")
-                l_scenes.sort()
+                self.sort_scenes(l_scenes)
                 i = 0
                 for scene in l_scenes:
                     os.rename(scene,self.scene_directory+"scene_"+str(i))
@@ -133,7 +133,7 @@ class SceneComponent:
     def get_scene_previews(self):
         self.l_scene_previews.clear()
         l_scenes = glob.glob(self.scene_directory+"*")
-        l_scenes.sort()
+        self.sort_scenes(l_scenes)
         for scene in l_scenes:
             try:
                 preview_sprite = sprite_component.SpriteComponent()
@@ -142,6 +142,22 @@ class SceneComponent:
                 self.l_scene_previews.append(preview_sprite)
             except Exception as Error:
                 print(Error)
+    
+    def sort_scenes(self,l_scenes):
+        i = 0
+        j = 0
+        while i < len(l_scenes):
+            key = int(l_scenes[i][27:])
+            key_string = l_scenes[i]
+            j = i + 1
+            while j < len(l_scenes):
+                if key > int(l_scenes[j][27:]):
+                    l_scenes[i] = l_scenes[j]
+                    l_scenes[j] = key_string
+                    key = int(l_scenes[i][27:])
+                    key_string = l_scenes[i]
+                j += 1
+            i += 1
         
     def draw_scene_previews(self,screen):
         x_position = 128
@@ -152,8 +168,9 @@ class SceneComponent:
                 scene_name = scene_preview.sprite_path.rstrip("/preview.png")
                 scene_name = scene_name[21:]
                 scene_name_image = self.font.render(scene_name, 1, self.font_color)
-                scene_preview.update(Vector(x_position+self.scroll_delta,self.y_position+16))
-
+                scene_preview.update(Vector(x_position+self.scroll_delta,self.y_position+16),\
+                                     Vector(self.x_scale-self.x_crop,self.y_scale-self.y_crop))
+                
                 # update working scene if new scene selected
                 if scene_preview.rect.collidepoint(mouse_position):
                     color = self.scene_bg_color_selected
@@ -176,6 +193,7 @@ class SceneComponent:
 
                 crop_rect = pygame.Rect(0, 0, self.x_scale-self.x_crop, self.y_scale-self.y_crop)
                 pygame.draw.rect(screen,color, (x_position-8+self.scroll_delta,self.y_position + 8,self.x_scale-self.x_crop+16,self.y_scale-self.y_crop+16))
+                pygame.draw.rect(screen,(255,0,0),scene_preview.rect)
                 screen.blit(scene_preview.image,(scene_preview.position.x,scene_preview.position.y),crop_rect)
-                screen.blit(scene_name_image,(scene_preview.position.x+48,scene_preview.position.y+scene_preview.image_size.y))
+                screen.blit(scene_name_image,(scene_preview.position.x,scene_preview.position.y+scene_preview.image_size.y - self.y_crop))
                 x_position += self.x_scale+8
