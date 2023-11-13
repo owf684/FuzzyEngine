@@ -65,6 +65,14 @@ class ButtonUIComponent:
                 if self.toggled:
                     self.toggled = False
                     self.button_signal.send(**kwargs)
+            case 'delete-scene':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
+            case 'reload-scene':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -92,10 +100,15 @@ class ButtonSignal:
                 print("add object")
             
             case 'add-scene':
-                print("add scene")
+                level_editor.c_scene.add_scene()
 
             case 'save-scene':
                 level_editor.c_scene.b_save_scene = True
+
+            case 'delete-scene':
+                level_editor.c_scene.delete_scene()
+            case 'reload-scene':
+                level_editor.c_scene.load_scene()
             case _:
                 None
 
