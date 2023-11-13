@@ -67,9 +67,13 @@ class SpriteComponent:
         except Exception as Error:
             print("ERROR::anim_util.py::determine_frame_count", Error)
             
-    def update(self,position):
+    def update(self,position,rect=None):
         self.position = position()
-        self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size.x,self.image_size.y)
-
+        if rect is not None:
+            self.rect = pygame.Rect(self.position.x,self.position.y,rect.x,rect.y)
+        else:
+            self.rect = pygame.Rect(self.position.x,self.position.y,self.image_size.x,self.image_size.y)
+        
+            
 def create_object():
     return SpriteComponent()
