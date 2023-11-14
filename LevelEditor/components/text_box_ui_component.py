@@ -62,7 +62,7 @@ class TextBoxUIComponent:
         # clear event or else it'll keep adding the same key
         self.event = None
 
-        self.read_input()
+        #self.read_input()
     def read_input(self):
 
         print(self.input_text)
