@@ -195,5 +195,5 @@ class SceneComponent:
                 pygame.draw.rect(screen,color, (x_position-8+self.scroll_delta,self.y_position + 8,self.x_scale-self.x_crop+16,self.y_scale-self.y_crop+16))
                 pygame.draw.rect(screen,(255,0,0),scene_preview.rect)
                 screen.blit(scene_preview.image,(scene_preview.position.x,scene_preview.position.y),crop_rect)
-                screen.blit(scene_name_image,(scene_preview.position.x,scene_preview.position.y+scene_preview.image_size.y - self.y_crop))
+                screen.blit(scene_name_image,(scene_preview.position.x + scene_preview.image_size.x/6 ,scene_preview.position.y+scene_preview.image_size.y))    
                 x_position += self.x_scale+8
