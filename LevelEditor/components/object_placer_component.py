@@ -16,8 +16,7 @@ class ObjectPlacerComponent:
         mouse_position = pygame.mouse.get_pos()
         if level_editor.edit:
             
-            if d_inputs['left-click'] and not d_inputs['left_click_latch']:
-                d_inputs['left_click_latch'] = True
+            if d_inputs['left-click']: 
 
                 obj = level_editor.c_object_creator.create_selected_object()
 
@@ -27,26 +26,18 @@ class ObjectPlacerComponent:
                     if not self.object_exists(mouse_position,game_objects):
                         self.add_game_object(mouse_position,obj,game_objects,level_editor)
 
-            elif not d_inputs['left-click'] and d_inputs["left_click_latch"]:
-
-                d_inputs["left_click_latch"] = True
 
     def remove_object(self,d_inputs,game_objects, level_editor, e_graphics):
         if level_editor.edit:    
             mouse_position = pygame.mouse.get_pos()
 
-            if d_inputs['right-click'] and not d_inputs['right_click_latch']:
-
-                d_inputs['right_click_latch'] = True
+            if d_inputs['right-click']:
 
                 if self.object_exists(mouse_position,e_graphics.render_buffer):
                     e_graphics.render_buffer.remove(self.selected_object)
 
                 if self.object_exists(mouse_position,game_objects):
                     game_objects.remove(self.selected_object)
-
-            elif not d_inputs['right-click'] and d_inputs['right_click_latch']:
-                d_inputs['right_click_latch'] = False
         
     def object_exists(self,mouse_position,game_objects):
         for objects in game_objects:
