@@ -17,6 +17,7 @@ class ButtonUIComponent:
         self.button_signal = ButtonSignal()
         self.toggled = False
 
+        self.render = True
     def set_animation_state(self,d_inputs):
 
         mouse_position = pygame.mouse.get_pos()
@@ -73,6 +74,14 @@ class ButtonUIComponent:
                 if self.toggled:
                     self.toggled = False
                     self.button_signal.send(**kwargs)
+            case 'save-object':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
+            case 'cancel-save':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -97,7 +106,7 @@ class ButtonSignal:
                 level_editor.attribute_ui.restore_attribute_components()
             
             case 'add':
-                print("add object")
+                level_editor.c_object.trigger_object_prompt = True
             
             case 'add-scene':
                 level_editor.c_scene.add_scene()
@@ -109,6 +118,10 @@ class ButtonSignal:
                 level_editor.c_scene.delete_scene()
             case 'reload-scene':
                 level_editor.c_scene.load_scene()
+            case 'save-object':
+                level_editor.c_object.save_object()
+            case 'cancel-save':
+                level_editor.c_object.cancel_prompt()
             case _:
                 None
 
