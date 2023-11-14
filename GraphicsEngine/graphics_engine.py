@@ -56,14 +56,14 @@ class GraphicsEngine:
        
         e_level_editor.tool_bar.draw_toolbar(self.screen) 
         
-        
-
         e_level_editor.attribute_ui.draw_attributes(self.screen)
         
+        e_level_editor.c_object.draw_object_prompt(self.screen)
         
         
         for key, button in e_level_editor.l_button_ui_elements.items():
-            button.draw_button(self.screen)
+            if button.render:
+                button.draw_button(self.screen)
   
         for text_box in e_level_editor.text_box_ui.l_text_boxes:
             text_box.draw_text_box(self.screen)
