@@ -3,7 +3,7 @@ class ObjectPlacerComponent:
 
     def __init__(self):
         self.selected_object = None
-
+        self.place_enabled = True
     def update(self,**kwargs):
         d_inputs = kwargs['InputDict']
         game_objects = kwargs['GameObjects']
@@ -14,7 +14,7 @@ class ObjectPlacerComponent:
 
     def place_object(self,d_inputs,game_objects,level_editor):
         mouse_position = pygame.mouse.get_pos()
-        if level_editor.edit:
+        if level_editor.edit and self.place_enabled:
             
             if d_inputs['left-click']: 
 
