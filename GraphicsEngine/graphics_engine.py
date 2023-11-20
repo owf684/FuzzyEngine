@@ -21,7 +21,7 @@ class GraphicsEngine:
         self.cushion = 32
         self.draw_button_ui_flag = False
         self.button_objects = None
-        pygame.display.set_caption("Fario Faker")
+        pygame.display.set_caption("Fuzzy Engine")
 
     def update(self, **kwargs):
         
