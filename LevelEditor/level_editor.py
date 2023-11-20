@@ -50,6 +50,7 @@ class LevelEditor:
         self.back_button = button_ui_component.ButtonUIComponent()
         self.add_object_button = button_ui_component.ButtonUIComponent()
         self.remove_object_button = button_ui_component.ButtonUIComponent()
+        self.collision_button = button_ui_component.ButtonUIComponent()
 
         # setup scene buttons
         self.add_scene_button = button_ui_component.ButtonUIComponent()
@@ -79,7 +80,7 @@ class LevelEditor:
 
         self.selected_object = None
         self.edit = True
-
+        self.draw_colliders = True
     def update(self,**kwargs):
         d_inputs=kwargs['InputDict']
         game_objects = kwargs['GameObjects']
@@ -93,6 +94,7 @@ class LevelEditor:
             if button.render:
                 button.update(Key=key,InputDict=d_inputs,ALevelEditor=self)
 
+        e_graphics.draw_colliders = self.draw_colliders
         self.attribute_ui.update_selected_object(d_inputs,game_objects)
         self.attribute_ui.update_object_attributes(d_inputs)
 
@@ -116,6 +118,7 @@ class LevelEditor:
         self.save_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_object_button.png",2,Vector(128,64))
         self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png",2,Vector(128,64))
         self.file_dialog_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/folder_dialog.png",2,Vector(32,32))
+        self.collision_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/collision_button.png",2,Vector(32,32))
 
         self.save_object_button.render = False
         self.cancel_save_button.render = False
@@ -126,6 +129,7 @@ class LevelEditor:
         self.play_pause_button.sprite.position = Vector(self.screen_width+10,25)
         self.add_object_button.sprite.position = Vector(self.screen_width + 10 + self.play_pause_button.sprite.sprite_sheet[-1].get_width() + 5, 25)
         self.remove_object_button.sprite.position = Vector(self.add_object_button.sprite.position.x+5+self.add_object_button.sprite.sprite_sheet[-1].get_width(),25)
+        self.collision_button.sprite.position = Vector(self.remove_object_button.sprite.position.x+5+self.remove_object_button.sprite.sprite_sheet[-1].get_width(),25)
         self.back_button.sprite.position = Vector(self.screen_width+10,170)
         
         self.save_scene_button.sprite.position = Vector(20, self.screen_height)
@@ -149,6 +153,8 @@ class LevelEditor:
         self.cancel_save_button.sprite.create_sprite_sheet_rect()
         self.file_dialog_button.sprite.create_sprite_sheet_rect()
         self.remove_object_button.sprite.create_sprite_sheet_rect()
+        self.collision_button.sprite.create_sprite_sheet_rect()
+
 
         # add to ui element
         self.l_button_ui_elements = {'play':    self.play_pause_button,
@@ -161,7 +167,8 @@ class LevelEditor:
                                      'save-object': self.save_object_button,
                                      'cancel-save': self.cancel_save_button,
                                      'file-dialog': self.file_dialog_button,
-                                     'remove-object': self.remove_object_button    }
+                                     'remove-object': self.remove_object_button,
+                                     'collision-button': self.collision_button  }
     
 
         
