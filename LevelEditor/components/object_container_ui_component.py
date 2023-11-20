@@ -67,17 +67,21 @@ class ObjectContainerUIComponent:
                 screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
   
     def update_object_container_ui(self,c_object_creator):
-        if c_object_creator.update_editor_ui:
+        try:
 
-            for objects in c_object_creator.get_selected_category():
-                objects[0].generic_sprite_1.create_sprite(self.object_container_path)
+            if c_object_creator.update_editor_ui:
 
-            c_object_creator.get_selected_object()[0].generic_sprite_1.create_sprite(self.object_container_selected_path)
+                for objects in c_object_creator.get_selected_category():
+                    objects[0].generic_sprite_1.create_sprite(self.object_container_path)
 
-            self.l_object_editor_ui_elements.clear()
+                c_object_creator.get_selected_object()[0].generic_sprite_1.create_sprite(self.object_container_selected_path)
 
-            for objects in c_object_creator.get_selected_category():
-                self.l_object_editor_ui_elements.append(objects[0])
+                self.l_object_editor_ui_elements.clear()
 
-            c_object_creator.update_editor_ui = False
+                for objects in c_object_creator.get_selected_category():
+                    self.l_object_editor_ui_elements.append(objects[0])
+
+                c_object_creator.update_editor_ui = False
+        except:
+            print(c_object_creator.get_selected_object())
 
