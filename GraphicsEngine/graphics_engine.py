@@ -21,6 +21,8 @@ class GraphicsEngine:
         self.cushion = 32
         self.draw_button_ui_flag = False
         self.button_objects = None
+        self.draw_colliders = True
+
         pygame.display.set_caption("Fuzzy Engine")
 
     def update(self, **kwargs):
@@ -92,5 +94,6 @@ class GraphicsEngine:
     def draw_objects(self):
       for objects in self.render_buffer:
             self.screen.blit(objects.current_sprite.image,(objects.current_sprite.position.x,objects.current_sprite.position.y))
-            pygame.draw.rect(self.screen, (0,255,0),objects.current_sprite.rect,2)
+            if self.draw_colliders:
+                pygame.draw.rect(self.screen, (0,255,0),objects.current_sprite.rect,2)
     
