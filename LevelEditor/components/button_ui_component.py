@@ -90,6 +90,10 @@ class ButtonUIComponent:
                 if self.toggled:
                     self.toggled = False
                     self.button_signal.send(**kwargs)
+            case 'collision-button':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -147,6 +151,8 @@ class ButtonSignal:
                     level_editor.c_object_creator.create_objects_dict()
                     level_editor.c_object_creator.organize_objects()
                     level_editor.object_container_ui.init_ui(level_editor.c_object_creator)
+            case 'collision-button':
+                level_editor.draw_colliders = not level_editor.draw_colliders
                             
             case _:
                 None
