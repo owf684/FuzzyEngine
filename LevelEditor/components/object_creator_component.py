@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-
+import failed_module_load
 
 ''' Hungarian notation
 l = list()
@@ -43,6 +43,15 @@ class ObjectCreatorComponent:
 		self.i_object = 0
 		self.update_editor_ui = False
 
+	def reset(self):
+		self.l_json_modules.clear()
+		self.l_objects.clear()
+		self.d_modules = {}
+		self.l_categories.clear()
+		self.i_category = 0
+		self.i_object = 0
+		self.update_editor_ui = False		
+		
 	def create_json_list(self):
 		for root, dirs, files in os.walk(self.s_directory_path):
 			for json_file in files:
@@ -76,7 +85,8 @@ class ObjectCreatorComponent:
 				if A[i][2] == A[k][2]:
 					temp_list.append([A[k][0],A[k][1]]) 
 					A.remove(A[k])
-				k += 1
+				else:
+					k += 1
 			self.l_categories.append(temp_list)
 			i += 1
 
@@ -129,13 +139,30 @@ class ObjectCreatorComponent:
 		return self.d_modules[module_name].create_object() 
 	
 	def create_new_object(self,json_module):
-		with open(json_module,'r') as json_file:
-			module_data = json.load(json_file)
-		module_name = module_data['object_file'].rstrip(".py")
-		module = __import__(module_name)
-		return module.create_object()
+		try:
 
+			with open(json_module,'r') as json_file:
+				module_data = json.load(json_file)
+			module_name = module_data['object_file'].rstrip(".py")
+			module = __import__(module_name)
+			return module.create_object()
+		except Exception as Error:
+			return failed_module_load.create_object()
+			
+	def destroy_selected_object(self):
+		selected_object = self.get_selected_object()[1]
+		print(selected_object)
+		reset_ui = False
+		for root, dirs, files in os.walk("./"):
+			for file in files:
+				if selected_object in file and (".py" in file or ".json" in file) and not '.pyc' in file and "failed_module_load" not in file:
+					os.remove(root+"/"+file)
+					reset_ui = True
 
+		if reset_ui:
+			self.i_category = 0
+			self.i_object = 0
+			return True
 
-
-
+		else:
+			return False
