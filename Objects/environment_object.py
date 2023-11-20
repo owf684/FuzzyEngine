@@ -4,6 +4,7 @@ import sprite_component
 import physics_component
 import collider_component
 import save_component
+
 class EnvironmentObject:
 
     def __init__(self):
