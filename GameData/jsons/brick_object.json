@@ -1,8 +1,0 @@
-{
-"object_directory"	: "./GameData/EnvironmentObjects/", 
-"object_file"		: "brick_object.py",
-"object_class"		: "BrickObject",
-"object_category"	: "Environment"	
-}
-    
-    
