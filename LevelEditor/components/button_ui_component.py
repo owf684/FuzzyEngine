@@ -82,6 +82,14 @@ class ButtonUIComponent:
                 if self.toggled:
                     self.toggled = False
                     self.button_signal.send(**kwargs)
+            case 'file-dialog':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
+            case 'remove-object':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -107,6 +115,7 @@ class ButtonSignal:
             
             case 'add':
                 level_editor.c_object.trigger_object_prompt = True
+                level_editor.object_placer.place_enabled = False
             
             case 'add-scene':
                 level_editor.c_scene.add_scene()
@@ -120,8 +129,25 @@ class ButtonSignal:
                 level_editor.c_scene.load_scene()
             case 'save-object':
                 level_editor.c_object.save_object()
+                level_editor.object_placer.place_enabled = True
+                level_editor.c_object_creator.reset()
+                level_editor.c_object_creator.create_json_list()
+                level_editor.c_object_creator.create_objects_dict()
+                level_editor.c_object_creator.organize_objects()
+                level_editor.object_container_ui.init_ui(level_editor.c_object_creator)
             case 'cancel-save':
                 level_editor.c_object.cancel_prompt()
+                level_editor.object_placer.place_enabled = True
+            case 'file-dialog':
+                level_editor.c_object.get_directory()
+            case 'remove-object':
+                if level_editor.c_object_creator.destroy_selected_object():
+                    level_editor.c_object_creator.reset()
+                    level_editor.c_object_creator.create_json_list()
+                    level_editor.c_object_creator.create_objects_dict()
+                    level_editor.c_object_creator.organize_objects()
+                    level_editor.object_container_ui.init_ui(level_editor.c_object_creator)
+                            
             case _:
                 None
 
