@@ -37,7 +37,7 @@ class ObjectCreatorComponent:
 		self.l_json_modules = list()
 		self.l_objects = list()
 		self.d_modules = {}
-		self.s_directory_path = './'
+		self.s_directory_path = './GameData/jsons/'
 		self.l_categories = list()
 		self.i_category = 0
 		self.i_object = 0
@@ -52,12 +52,13 @@ class ObjectCreatorComponent:
 		self.i_object = 0
 		self.update_editor_ui = False		
 		
-	def create_json_list(self):
-		for root, dirs, files in os.walk(self.s_directory_path):
+	def create_json_list(self,directory_path='./GameData/jsons/'):
+		for root, dirs, files in os.walk(directory_path):
 			for json_file in files:
 				file_extension = os.path.splitext(json_file)[1]
 				if file_extension.lower() == '.json':
 					self.l_json_modules.append(os.path.join(root,json_file))
+		print(len(self.l_json_modules))
 					
 	def create_objects_dict(self):	
 		for json_module in self.l_json_modules:
