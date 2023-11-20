@@ -49,6 +49,7 @@ class LevelEditor:
         self.play_pause_button = button_ui_component.ButtonUIComponent()
         self.back_button = button_ui_component.ButtonUIComponent()
         self.add_object_button = button_ui_component.ButtonUIComponent()
+        self.remove_object_button = button_ui_component.ButtonUIComponent()
 
         # setup scene buttons
         self.add_scene_button = button_ui_component.ButtonUIComponent()
@@ -59,6 +60,7 @@ class LevelEditor:
         # setup object form buttons
         self.save_object_button = button_ui_component.ButtonUIComponent()
         self.cancel_save_button = button_ui_component.ButtonUIComponent()
+        self.file_dialog_button = button_ui_component.ButtonUIComponent()
 
         self.l_button_ui_elements = {}
         self.setup_button_ui()
@@ -98,13 +100,14 @@ class LevelEditor:
 
         self.object_placer.update(InputDict=d_inputs,GameObjects=game_objects,ALevelEditor=self,GraphicsEngine=e_graphics)
 
-        self.c_object.update(TextBoxes=self.text_box_ui.l_text_boxes,Buttons=self.l_button_ui_elements)
-        self.text_box_ui.get_input()
+        self.c_object.update(TextBoxes=self.text_box_ui.l_text_boxes,Buttons=self.l_button_ui_elements,InputDict=d_inputs)
+        self.text_box_ui.get_input(InputDict=d_inputs)
 
     def setup_button_ui(self):
         # create sprite sheets
-        self.play_pause_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/play_pause.png",4,Vector(64,64))
-        self.add_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/add_button.png",2,Vector(64,64))
+        self.play_pause_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/play_pause.png",4,Vector(32,32))
+        self.add_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/add_button_small.png",2,Vector(32,32))
+        self.remove_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/delete_button.png",2,Vector(32,32))
         self.back_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/back_button.png",2,Vector(32,32))
         self.add_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/add_button_small.png",2,Vector(32,32))
         self.save_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_button.png",2,Vector(32,32))
@@ -112,14 +115,17 @@ class LevelEditor:
         self.reload_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/reload_button.png",2,Vector(32,32))
         self.save_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_object_button.png",2,Vector(128,64))
         self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png",2,Vector(128,64))
-        
+        self.file_dialog_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/folder_dialog.png",2,Vector(32,32))
+
         self.save_object_button.render = False
         self.cancel_save_button.render = False
+        self.file_dialog_button.render = False
 
         # setup positions
         self.play_pause_position = Vector(self.screen_width,25)
-        self.play_pause_button.sprite.position = Vector(self.screen_width,25)
-        self.add_object_button.sprite.position = Vector(self.screen_width + self.play_pause_button.sprite.sprite_sheet[-1].get_width() + 5, 25)
+        self.play_pause_button.sprite.position = Vector(self.screen_width+10,25)
+        self.add_object_button.sprite.position = Vector(self.screen_width + 10 + self.play_pause_button.sprite.sprite_sheet[-1].get_width() + 5, 25)
+        self.remove_object_button.sprite.position = Vector(self.add_object_button.sprite.position.x+5+self.add_object_button.sprite.sprite_sheet[-1].get_width(),25)
         self.back_button.sprite.position = Vector(self.screen_width+10,170)
         
         self.save_scene_button.sprite.position = Vector(20, self.screen_height)
@@ -129,7 +135,7 @@ class LevelEditor:
 
         self.save_object_button.sprite.position = Vector(self.screen_width*.4+50,self.screen_height/2+128)
         self.cancel_save_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/2+128)
-
+        self.file_dialog_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/8 + 58)
 
         # create sprite sheet rects
         self.play_pause_button.sprite.create_sprite_sheet_rect()
@@ -141,7 +147,9 @@ class LevelEditor:
         self.reload_scene_button.sprite.create_sprite_sheet_rect()
         self.save_object_button.sprite.create_sprite_sheet_rect()
         self.cancel_save_button.sprite.create_sprite_sheet_rect()
-        
+        self.file_dialog_button.sprite.create_sprite_sheet_rect()
+        self.remove_object_button.sprite.create_sprite_sheet_rect()
+
         # add to ui element
         self.l_button_ui_elements = {'play':    self.play_pause_button,
                                      'add' :    self.add_object_button,
@@ -151,7 +159,9 @@ class LevelEditor:
                                      "delete-scene": self.delete_scene_button,
                                      "reload-scene": self.reload_scene_button,
                                      'save-object': self.save_object_button,
-                                     'cancel-save': self.cancel_save_button    }
+                                     'cancel-save': self.cancel_save_button,
+                                     'file-dialog': self.file_dialog_button,
+                                     'remove-object': self.remove_object_button    }
     
 
         
