@@ -14,7 +14,7 @@ class AttributeUIComponent:
         
         self.attr_window_color = (70,70,70)
         self.attr_window_position = Vector(self.display_width+5, 200)
-        self.attr_window_size = Vector(365, self.display_height-25)
+        self.attr_window_size = Vector(130, self.display_height-25)
 
         self.font = pygame.font.Font(None,36)
         self.font_color = (255,255,255)
@@ -30,13 +30,20 @@ class AttributeUIComponent:
 
     def draw_attributes(self,screen):
 
+
         pygame.draw.rect(screen,self.attr_window_color, (self.attr_window_position.x,self.attr_window_position.y,self.attr_window_size.x,self.attr_window_size.y))
-    
+
+
         for attr in self.l_attribute_components:
             attr.update_value()
-            screen.blit(attr.attribute_image, (attr.position.x,attr.position.y)) 
+            screen.blit(attr.attribute_image, (attr.position.x,attr.position.y))         
+        pygame.draw.rect(screen,self.attr_window_color, (self.attr_window_position.x+130,self.attr_window_position.y,self.display_width/6.25,self.attr_window_size.y))
+
+        for attr in self.l_attribute_components:
+            attr.update_value()
             screen.blit(attr.value_image , ((attr.position.x+ attr.x_spacing),attr.position.y ))
-        
+
+ 
     def update_selected_object(self,d_inputs,game_objects):
         mouse_position = pygame.mouse.get_pos()
 
@@ -136,7 +143,7 @@ class AttributeComponent:
         self.font = pygame.font.Font(None,18)
         self.font_color = (255,255,255)
         self.select_color = (0,50,225)    
-        self.x_spacing = 125
+        self.x_spacing = 150
         self.y_increment = 25
     
     def create_attribute(self,attr, position):
@@ -159,9 +166,9 @@ class AttributeComponent:
     def update_value(self):
         mouse_position = pygame.mouse.get_pos()
 
-        self.value_image = self.font.render(str(self.attr_data[1])[:34],1,self.font_color)
+        self.value_image = self.font.render(str(self.attr_data[1]),1,self.font_color)
     
-        self.value_selected_image = self.font.render(str(self.attr_data[1])[:34],1,self.select_color)
+        self.value_selected_image = self.font.render(str(self.attr_data[1]),1,self.select_color)
         
         self.value_unselected_image = self.value_image
 
