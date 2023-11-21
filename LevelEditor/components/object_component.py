@@ -1,6 +1,7 @@
 import pygame
 import sys
 import json
+import os
 sys.path.append("./Objects/components")
 sys.path.append("./Objects/Templates")
 import object_template
@@ -27,7 +28,13 @@ class ObjectComponent:
         self.category_combo_box.add_entry("game_object")
         self.category_combo_box.add_entry("item_object")
         self.category_combo_box.add_entry("scene_object")
+        self.sprite_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
+        self.sprite_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 64))
+        self.sprite_dir_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
+        self.sprite_dir_combo_box.set_position(Vector(self.display_width*.4 + 50,self.display_height/8 + 64))
+     
         self.d_inputs = None
+        self.class_name_value = ''
 
     def update(self,**kwargs):
         self.l_text_boxes = kwargs['TextBoxes']
@@ -36,46 +43,68 @@ class ObjectComponent:
     def draw_object_prompt(self,screen):
 
         if self.trigger_object_prompt:
-            
-            self.category_combo_box.update(InputDict=self.d_inputs)
+            if not self.sprite_combo_box.show_entries and not self.sprite_dir_combo_box.show_entries:
+                self.category_combo_box.update(InputDict=self.d_inputs)
+            self.sprite_combo_box.update(InputDict=self.d_inputs)
+            self.sprite_dir_combo_box.update(InputDict=self.d_inputs)
 
             pygame.draw.rect(screen,(70,70,70),(self.display_width*.4,self.display_height/8,500,self.display_height))
             
             object_directory = self.font.render("Sprite Directory:", 1, self.font_color)
-            screen.blit(object_directory,(self.display_width*.4+50,self.display_height/8 + 64))
+            screen.blit(object_directory,(self.display_width*.4+50,self.display_height/8 + 64 -self.sprite_dir_combo_box.height))
         
             object_file = self.font.render("Object Class:", 1, self.font_color)
             screen.blit(object_file,(self.display_width*.4+50,self.display_height/8 + 128))
 
             object_class = self.font.render("Object Category:", 1, self.font_color)
             screen.blit(object_class,(self.display_width*.4+50,self.display_height/8 + 192))
-
+            
             self.category_combo_box.draw_combo_box(screen)
+            self.sprite_combo_box.draw_combo_box(screen)
+            self.sprite_dir_combo_box.draw_combo_box(screen)
+
             self.l_button_ui_elements['save-object'].render = True
             self.l_button_ui_elements['cancel-save'].render = True
-            # self.l_button_ui_elements['file-dialog'].render = True # failure 
-            if not self.add_text_boxes:
 
-                textBox1 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.4 + 250,self.display_height/8 + 64))
-                self.l_text_boxes.append(textBox1)
+            if (self.sprite_combo_box.show_entries )and self.add_text_boxes:
+                self.class_name_value = self.l_text_boxes[-1].userInput
+                self.l_text_boxes.pop()
+                self.add_text_boxes = False
+                        
+            if not self.add_text_boxes and not self.sprite_combo_box.show_entries:
+
 
                 textBox2 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.4 + 250,self.display_height/8 + 128))
+                textBox2.userInput = self.class_name_value
                 self.l_text_boxes.append(textBox2)
                    
                 self.add_text_boxes = True
 
+    def find_sprites(self):
+        self.sprite_combo_box.reset()
+        self.sprite_dir_combo_box.reset()
+        for root, dirs, files in os.walk("./GameData/Assets/"):
+            if len(root[18:]) > 0:
+                self.sprite_dir_combo_box.add_entry(root[18:])
+                
+            for pngs in files:
+                if ".png" in pngs:
+                    self.sprite_combo_box.add_entry(pngs,directory=root[18:])
+        
+                    
     def cancel_prompt(self):
         self.add_text_boxes = False
         self.trigger_object_prompt = False
         self.l_button_ui_elements['save-object'].render = False
         self.l_button_ui_elements['cancel-save'].render = False
         self.l_button_ui_elements['file-dialog'].render = False
+        self.class_name_value = ''
         self.l_text_boxes.clear()
 
 
     def save_object(self):
-        sprite_dir = self.l_text_boxes[0].userInput
-        object_class =self.l_text_boxes[1].userInput
+        sprite_dir = self.sprite_combo_box.get_directory() + "/" + self.sprite_combo_box.get_value()
+        object_class =self.l_text_boxes[0].userInput
         object_category = self.category_combo_box.get_value()
 
         file_directory = './GameData/'+object_template.object_categories[object_category] +'s'
