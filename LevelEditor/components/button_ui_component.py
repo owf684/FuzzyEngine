@@ -118,6 +118,7 @@ class ButtonSignal:
                 level_editor.attribute_ui.restore_attribute_components()
             
             case 'add':
+                level_editor.c_object.find_sprites()
                 level_editor.c_object.trigger_object_prompt = True
                 level_editor.object_placer.place_enabled = False
             
