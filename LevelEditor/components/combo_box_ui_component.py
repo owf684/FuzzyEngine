@@ -11,6 +11,9 @@ global VALUE
 VALUE = 2
 global COLOR
 COLOR = 3
+global DIRECTORY
+DIRECTORY = 4
+
 class ComboBoxUIComponent:
 
     def __init__(self,width,height):
@@ -28,6 +31,11 @@ class ComboBoxUIComponent:
         self.height=height
         self.sensing_rect = None
         
+    def reset(self):
+        self.entries.clear()
+        self.y_gap = 0
+        self.selected_index = 0
+        
     def draw_combo_box(self,screen):
         if len(self.entries) > 0:
 
@@ -44,7 +52,7 @@ class ComboBoxUIComponent:
                     screen.blit( entry[ENTRY_IMAGE],(self.position.x+5,y_position+self.entries[self.selected_index][RECT].height/4) )
                     y_position += self.height
 
-
+    
     def set_position(self,position_vector):
         self.position = position_vector
         self.sensing_rect = pygame.Rect(position_vector.x,position_vector.y,self.width,self.height)
@@ -52,13 +60,15 @@ class ComboBoxUIComponent:
     def get_value(self):
         return  self.entries[self.selected_index][VALUE]
 
+    def get_directory(self):
+        return self.entries[self.selected_index][DIRECTORY]
     
-    def add_entry(self,input):
+    def add_entry(self,input,directory=''):
 
         entry_image = self.font.render(input, 1, self.font_color)
         rect = pygame.Rect(self.position.x,self.position.y+self.y_gap,self.width,self.height)
         self.y_gap += self.height
-        self.entries.append([entry_image,rect,input,self.entry_unselected_color])
+        self.entries.append([entry_image,rect,input,self.entry_unselected_color,directory])
 
     def update(self,**kwargs):
         d_inputs = kwargs['InputDict']
