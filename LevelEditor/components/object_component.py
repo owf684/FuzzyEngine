@@ -23,16 +23,31 @@ class ObjectComponent:
         self.l_button_ui_elements = list()
         self.directory_path = None
         self.category_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
-        self.category_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 192))
+        self.category_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 448))
         self.category_combo_box.add_entry("environment_object")
         self.category_combo_box.add_entry("game_object")
         self.category_combo_box.add_entry("item_object")
         self.category_combo_box.add_entry("scene_object")
         self.sprite_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
         self.sprite_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 64))
-        self.sprite_dir_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
-        self.sprite_dir_combo_box.set_position(Vector(self.display_width*.4 + 50,self.display_height/8 + 64))
-     
+        self.skip_update = False
+        self.skip_update_2 = False
+        self.current_cb = 0
+        self.current_cb_2 = 0
+
+        self.sprite_dir_combo_box = list()
+        y_pos = 64
+        self.sprite_dir_cb_index = list()
+        for i in range(5):
+            self.sprite_dir_combo_box.append(combo_box_ui_component.ComboBoxUIComponent(200,25))
+            self.sprite_dir_combo_box[-1].set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + y_pos))
+            self.sprite_dir_cb_index.append(self.sprite_dir_combo_box[-1].selected_index)
+
+            y_pos += 64
+
+        self.current_sprite_cb = list()
+        self.sprite_cb = list()
+
         self.d_inputs = None
         self.class_name_value = ''
 
@@ -43,55 +58,112 @@ class ObjectComponent:
     def draw_object_prompt(self,screen):
 
         if self.trigger_object_prompt:
-            if not self.sprite_combo_box.show_entries and not self.sprite_dir_combo_box.show_entries:
-                self.category_combo_box.update(InputDict=self.d_inputs)
-            self.sprite_combo_box.update(InputDict=self.d_inputs)
-            self.sprite_dir_combo_box.update(InputDict=self.d_inputs)
+            self.category_combo_box.update(InputDict=self.d_inputs)
 
-            pygame.draw.rect(screen,(70,70,70),(self.display_width*.4,self.display_height/8,500,self.display_height))
+            i = 0 
+            for cb in reversed(self.sprite_dir_combo_box):
+                
+                if not self.skip_update:
+                    cb.update(InputDict=self.d_inputs)
+                    self.sprite_dir_cb_index[i] = cb.selected_index
+                    if cb.show_entries:
+                        self.skip_update = True
+                        self.current_cb = self.sprite_dir_combo_box.index(cb)
+
+                if self.skip_update and self.sprite_dir_combo_box.index(cb) == self.current_cb:
+                    cb.update(InputDict=self.d_inputs)
+                    self.sprite_dir_cb_index[i] = cb.selected_index
+                    self.skip_update = cb.show_entries
+                i += 1
+          
+            i = 0
+            for cb in reversed(self.sprite_cb):
+                if not self.skip_update_2:
+                    cb[self.sprite_dir_cb_index[i]].update(InputDict=self.d_inputs)
+
+                    if cb[self.sprite_dir_cb_index[i]].show_entries:
+                        self.skip_update_2 = True
+                        self.current_cb_2 = self.sprite_cb.index(cb)
+                if self.skip_update_2 and self.sprite_cb.index(cb) == self.current_cb_2:
+                    cb[self.sprite_dir_cb_index[i]].update(InputDict=self.d_inputs)
+                    self.skip_update_2 = cb[self.sprite_dir_cb_index[i]].show_entries
+
+                i += 1
+            pygame.draw.rect(screen,(70,70,70),(self.display_width*.4,self.display_height/8,700,self.display_height))
             
-            object_directory = self.font.render("Sprite Directory:", 1, self.font_color)
-            screen.blit(object_directory,(self.display_width*.4+50,self.display_height/8 + 64 -self.sprite_dir_combo_box.height))
-        
+            current_sprite = self.font.render("Current Sprite:", 1, self.font_color)
+            screen.blit(current_sprite,(self.display_width*.4+50,self.display_height/8 + 64))
+
+            generic_sprite_1 = self.font.render("Generic Sprite 1:", 1, self.font_color)
+            screen.blit(generic_sprite_1,(self.display_width*.4+50,self.display_height/8 + 128))
+
+            generic_sprite_2 = self.font.render("Generic Sprite 2:", 1, self.font_color)
+            screen.blit(generic_sprite_2,(self.display_width*.4+50,self.display_height/8 + 192))
+
+            generic_sprite_3 = self.font.render("Generic Sprite 3:", 1, self.font_color)
+            screen.blit(generic_sprite_3,(self.display_width*.4+50,self.display_height/8 + 256))
+
+            generic_sprite_4 = self.font.render("Generic Sprite 4:", 1, self.font_color)
+            screen.blit(generic_sprite_4,(self.display_width*.4+50,self.display_height/8 + 320))
+
             object_file = self.font.render("Object Class:", 1, self.font_color)
-            screen.blit(object_file,(self.display_width*.4+50,self.display_height/8 + 128))
+            screen.blit(object_file,(self.display_width*.4+50,self.display_height/8 + 384))
 
             object_class = self.font.render("Object Category:", 1, self.font_color)
-            screen.blit(object_class,(self.display_width*.4+50,self.display_height/8 + 192))
+            screen.blit(object_class,(self.display_width*.4+50,self.display_height/8 + 448))
             
             self.category_combo_box.draw_combo_box(screen)
-            self.sprite_combo_box.draw_combo_box(screen)
-            self.sprite_dir_combo_box.draw_combo_box(screen)
+            #self.current_sprite_cb[self.sprite_dir_combo_box[0].selected_index].draw_combo_box(screen)
 
+            for cb in reversed(self.sprite_dir_combo_box):
+                cb.draw_combo_box(screen)
+            i = 0
+            for cb in reversed(self.sprite_cb):
+                cb[self.sprite_dir_cb_index[i]].draw_combo_box(screen)
+                i += 1
             self.l_button_ui_elements['save-object'].render = True
             self.l_button_ui_elements['cancel-save'].render = True
 
-            if (self.sprite_combo_box.show_entries )and self.add_text_boxes:
+            if  self.add_text_boxes and self.sprite_dir_combo_box[-1].show_entries and len(self.sprite_dir_combo_box[-1].entries) >=2:
                 self.class_name_value = self.l_text_boxes[-1].userInput
                 self.l_text_boxes.pop()
                 self.add_text_boxes = False
-                        
-            if not self.add_text_boxes and not self.sprite_combo_box.show_entries:
+       
 
+            if not self.add_text_boxes and not self.sprite_dir_combo_box[-1].show_entries:
 
-                textBox2 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.4 + 250,self.display_height/8 + 128))
+                textBox2 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.4 + 250,self.display_height/8 + 384))
                 textBox2.userInput = self.class_name_value
-                self.l_text_boxes.append(textBox2)
-                   
+                self.l_text_boxes.append(textBox2)                
                 self.add_text_boxes = True
 
     def find_sprites(self):
-        self.sprite_combo_box.reset()
-        self.sprite_dir_combo_box.reset()
-        for root, dirs, files in os.walk("./GameData/Assets/"):
-            if len(root[18:]) > 0:
-                self.sprite_dir_combo_box.add_entry(root[18:])
-                
-            for pngs in files:
-                if ".png" in pngs:
-                    self.sprite_combo_box.add_entry(pngs,directory=root[18:])
+        for cb in self.sprite_dir_combo_box:
+            cb.reset()
+        self.sprite_cb.clear()
+        y_pos = 64
+
+        for cb in self.sprite_dir_combo_box:
+            new_cb = list()
+            for root, dirs, files in os.walk("./GameData/Assets/"):
+                if len(root[18:]) > 0:
+                    cb.add_entry(root[18:])
+
+                    new_cb.append(combo_box_ui_component.ComboBoxUIComponent(200,25))
+                    new_cb[-1].set_position(Vector(self.display_width*.4 + 450,self.display_height/8 + y_pos))
+                    new_cb[-1].add_entry('None')
+                for pngs in files:
+                    if ".png" in pngs:
+                        new_cb[-1].add_entry(pngs,directory=root[18:])
         
-                    
+                if len(new_cb) > 0 and len(new_cb[-1].entries) == 1:
+                    new_cb.pop()
+                    cb.y_gap -= cb.height
+                    cb.entries.pop()
+            
+            self.sprite_cb.append(new_cb)
+            y_pos += 64
+ 
     def cancel_prompt(self):
         self.add_text_boxes = False
         self.trigger_object_prompt = False
@@ -99,11 +171,13 @@ class ObjectComponent:
         self.l_button_ui_elements['cancel-save'].render = False
         self.l_button_ui_elements['file-dialog'].render = False
         self.class_name_value = ''
+        self.current_sprite_cb.clear()
+
         self.l_text_boxes.clear()
 
 
     def save_object(self):
-        sprite_dir = self.sprite_combo_box.get_directory() + "/" + self.sprite_combo_box.get_value()
+        sprite_dir = self.sprite_cb[0][0].get_directory() + "/" + self.sprite_cb[0][0].get_value()
         object_class =self.l_text_boxes[0].userInput
         object_category = self.category_combo_box.get_value()
 
