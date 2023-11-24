@@ -116,7 +116,7 @@ class LevelEditor:
         self.delete_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/delete_button.png",2,Vector(32,32))
         self.reload_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/reload_button.png",2,Vector(32,32))
         self.save_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_object_button.png",2,Vector(128,64))
-        self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png",2,Vector(128,64))
+        self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png",2,Vector(32,32))
         self.file_dialog_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/folder_dialog.png",2,Vector(32,32))
         self.collision_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/collision_button.png",2,Vector(32,32))
 
@@ -137,8 +137,8 @@ class LevelEditor:
         self.delete_scene_button.sprite.position = Vector(20, self.screen_height+64)
         self.reload_scene_button.sprite.position = Vector(20,self.screen_height+98)
 
-        self.save_object_button.sprite.position = Vector(self.screen_width*.4+50,self.screen_height/2+320)
-        self.cancel_save_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/2+320)
+        self.save_object_button.sprite.position = Vector(self.screen_width*.2+50,self.screen_height/2+300)
+        self.cancel_save_button.sprite.position = Vector(self.screen_width*.2+650,self.screen_height*.15)
         self.file_dialog_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/8 + 58)
 
         # create sprite sheet rects
