@@ -23,13 +23,13 @@ class ObjectComponent:
         self.l_button_ui_elements = list()
         self.directory_path = None
         self.category_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
-        self.category_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 448))
+        self.category_combo_box.set_position(Vector(self.display_width*.2 + 250,self.display_height/8 + 448))
         self.category_combo_box.add_entry("environment_object")
         self.category_combo_box.add_entry("game_object")
         self.category_combo_box.add_entry("item_object")
         self.category_combo_box.add_entry("scene_object")
         self.sprite_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
-        self.sprite_combo_box.set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + 64))
+        self.sprite_combo_box.set_position(Vector(self.display_width*.2 + 250,self.display_height/8 + 64))
         self.skip_update = False
         self.skip_update_2 = False
         self.current_cb = 0
@@ -40,7 +40,7 @@ class ObjectComponent:
         self.sprite_dir_cb_index = list()
         for i in range(5):
             self.sprite_dir_combo_box.append(combo_box_ui_component.ComboBoxUIComponent(200,25))
-            self.sprite_dir_combo_box[-1].set_position(Vector(self.display_width*.4 + 250,self.display_height/8 + y_pos))
+            self.sprite_dir_combo_box[-1].set_position(Vector(self.display_width*.2 + 250,self.display_height/8 + y_pos))
             self.sprite_dir_cb_index.append(self.sprite_dir_combo_box[-1].selected_index)
 
             y_pos += 64
@@ -89,28 +89,28 @@ class ObjectComponent:
                     self.skip_update_2 = cb[self.sprite_dir_cb_index[i]].show_entries
 
                 i += 1
-            pygame.draw.rect(screen,(70,70,70),(self.display_width*.4,self.display_height/8,700,self.display_height))
+            pygame.draw.rect(screen,(45,45,45),(self.display_width*.2,self.display_height/8,700,self.display_height+50))
             
             current_sprite = self.font.render("Current Sprite:", 1, self.font_color)
-            screen.blit(current_sprite,(self.display_width*.4+50,self.display_height/8 + 64))
+            screen.blit(current_sprite,(self.display_width*.2+50,self.display_height/8 + 64))
 
             generic_sprite_1 = self.font.render("Generic Sprite 1:", 1, self.font_color)
-            screen.blit(generic_sprite_1,(self.display_width*.4+50,self.display_height/8 + 128))
+            screen.blit(generic_sprite_1,(self.display_width*.2+50,self.display_height/8 + 128))
 
             generic_sprite_2 = self.font.render("Generic Sprite 2:", 1, self.font_color)
-            screen.blit(generic_sprite_2,(self.display_width*.4+50,self.display_height/8 + 192))
+            screen.blit(generic_sprite_2,(self.display_width*.2+50,self.display_height/8 + 192))
 
             generic_sprite_3 = self.font.render("Generic Sprite 3:", 1, self.font_color)
-            screen.blit(generic_sprite_3,(self.display_width*.4+50,self.display_height/8 + 256))
+            screen.blit(generic_sprite_3,(self.display_width*.2+50,self.display_height/8 + 256))
 
             generic_sprite_4 = self.font.render("Generic Sprite 4:", 1, self.font_color)
-            screen.blit(generic_sprite_4,(self.display_width*.4+50,self.display_height/8 + 320))
+            screen.blit(generic_sprite_4,(self.display_width*.2+50,self.display_height/8 + 320))
 
             object_file = self.font.render("Object Class:", 1, self.font_color)
-            screen.blit(object_file,(self.display_width*.4+50,self.display_height/8 + 384))
+            screen.blit(object_file,(self.display_width*.2+50,self.display_height/8 + 384))
 
             object_class = self.font.render("Object Category:", 1, self.font_color)
-            screen.blit(object_class,(self.display_width*.4+50,self.display_height/8 + 448))
+            screen.blit(object_class,(self.display_width*.2+50,self.display_height/8 + 448))
             
             self.category_combo_box.draw_combo_box(screen)
             #self.current_sprite_cb[self.sprite_dir_combo_box[0].selected_index].draw_combo_box(screen)
@@ -132,7 +132,7 @@ class ObjectComponent:
 
             if not self.add_text_boxes and not self.sprite_dir_combo_box[-1].show_entries:
 
-                textBox2 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.4 + 250,self.display_height/8 + 384))
+                textBox2 = text_box_ui_component.TextBox(200,25,Vector(self.display_width*.2 + 250,self.display_height/8 + 384))
                 textBox2.userInput = self.class_name_value
                 self.l_text_boxes.append(textBox2)                
                 self.add_text_boxes = True
@@ -150,7 +150,7 @@ class ObjectComponent:
                     cb.add_entry(root[18:])
 
                     new_cb.append(combo_box_ui_component.ComboBoxUIComponent(200,25))
-                    new_cb[-1].set_position(Vector(self.display_width*.4 + 450,self.display_height/8 + y_pos))
+                    new_cb[-1].set_position(Vector(self.display_width*.2 + 450,self.display_height/8 + y_pos))
                     new_cb[-1].add_entry('None')
                 for pngs in files:
                     if ".png" in pngs:
@@ -218,8 +218,13 @@ class ObjectComponent:
         file_template = object_template.file_template
         file_template['parent_object'] = "import " + object_category
         file_template['class_define'] = 'class ' + object_class + '(' + object_category + "." + object_template.object_categories[object_category] + "):"
+        
+        #if 'None' not in sprite_dir:
         file_template['current_sprite'] = "self.current_sprite.create_sprite('./GameData/Assets/"+sprite_dir+"')" 
+        #else: file_template.pop('current_sprite')
+
         file_template['object_json_file'] = "self.save_state.object_json_file='./GameData/jsons/" + file_name.rstrip('.py')+".json'"
+        
         file_template['object_return'] = "return " + object_class + "()"
       
         object_template.create_object_file(file_directory, file_name,file_template)
