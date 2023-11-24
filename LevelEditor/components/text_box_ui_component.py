@@ -55,11 +55,16 @@ class TextBoxUIComponent:
                     
                         case pygame.K_RETURN:
                             if len(self.selected_text_box.userInput) > 0:
-                                self.selected_text_box.linked_attr.attr_data[1] = float(self.selected_text_box.userInput)
-                                
-                                self.l_text_boxes.remove(self.selected_text_box)
 
-            self.selected_text_box.userInput = self.input_text
+                                if isinstance(self.selected_text_box.userInput,float):
+                                    self.selected_text_box.linked_attr.attr_data[1] = float(self.selected_text_box.userInput)
+                                    self.l_text_boxes.remove(self.selected_text_box)
+                                else:
+                                    self.selected_text_box.selected = False
+                                    self.selected_text_box.text_box_color = self.selected_text_box.unselected_color
+                                    self.selected_text_box = None
+            if self.selected_text_box is not None:
+                self.selected_text_box.userInput = self.input_text
         # clear event or else it'll keep adding the same key
         self.event = None
 
