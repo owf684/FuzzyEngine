@@ -60,7 +60,7 @@ class ObjectComponent:
         if self.trigger_object_prompt:
             self.category_combo_box.update(InputDict=self.d_inputs)
 
-            i = 0 
+            i = len(self.sprite_dir_combo_box)-1
             for cb in reversed(self.sprite_dir_combo_box):
                 
                 if not self.skip_update:
@@ -74,9 +74,9 @@ class ObjectComponent:
                     cb.update(InputDict=self.d_inputs)
                     self.sprite_dir_cb_index[i] = cb.selected_index
                     self.skip_update = cb.show_entries
-                i += 1
+                i -= 1
           
-            i = 0
+            i = len(self.sprite_dir_combo_box)-1
             for cb in reversed(self.sprite_cb):
                 if not self.skip_update_2:
                     cb[self.sprite_dir_cb_index[i]].update(InputDict=self.d_inputs)
@@ -88,7 +88,7 @@ class ObjectComponent:
                     cb[self.sprite_dir_cb_index[i]].update(InputDict=self.d_inputs)
                     self.skip_update_2 = cb[self.sprite_dir_cb_index[i]].show_entries
 
-                i += 1
+                i -= 1
             pygame.draw.rect(screen,(45,45,45),(self.display_width*.2,self.display_height/8,700,self.display_height+50))
             
             current_sprite = self.font.render("Current Sprite:", 1, self.font_color)
@@ -113,14 +113,13 @@ class ObjectComponent:
             screen.blit(object_class,(self.display_width*.2+50,self.display_height/8 + 448))
             
             self.category_combo_box.draw_combo_box(screen)
-            #self.current_sprite_cb[self.sprite_dir_combo_box[0].selected_index].draw_combo_box(screen)
 
             for cb in reversed(self.sprite_dir_combo_box):
                 cb.draw_combo_box(screen)
-            i = 0
+            i = len(self.sprite_dir_combo_box)-1
             for cb in reversed(self.sprite_cb):
                 cb[self.sprite_dir_cb_index[i]].draw_combo_box(screen)
-                i += 1
+                i -= 1
             self.l_button_ui_elements['save-object'].render = True
             self.l_button_ui_elements['cancel-save'].render = True
 
@@ -177,7 +176,15 @@ class ObjectComponent:
 
 
     def save_object(self):
-        sprite_dir = self.sprite_cb[0][0].get_directory() + "/" + self.sprite_cb[0][0].get_value()
+        current_sprite = self.sprite_cb[0][self.sprite_dir_cb_index[0]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[0]].get_value()
+        generic_sprite_1 = self.sprite_cb[0][self.sprite_dir_cb_index[1]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[1]].get_value()
+        generic_sprite_2 = self.sprite_cb[0][self.sprite_dir_cb_index[2]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[2]].get_value()
+        generic_sprite_3 = self.sprite_cb[0][self.sprite_dir_cb_index[3]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[3]].get_value()
+        generic_sprite_4 = self.sprite_cb[0][self.sprite_dir_cb_index[4]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[4]].get_value()
+       
+       
+       
+       
         object_class =self.l_text_boxes[0].userInput
         object_category = self.category_combo_box.get_value()
 
@@ -219,9 +226,25 @@ class ObjectComponent:
         file_template['parent_object'] = "import " + object_category
         file_template['class_define'] = 'class ' + object_class + '(' + object_category + "." + object_template.object_categories[object_category] + "):"
         
-        #if 'None' not in sprite_dir:
-        file_template['current_sprite'] = "self.current_sprite.create_sprite('./GameData/Assets/"+sprite_dir+"')" 
-        #else: file_template.pop('current_sprite')
+        if 'None' not in current_sprite:
+            file_template['current_sprite'] = "self.current_sprite.create_sprite('./GameData/Assets/"+current_sprite+"')" 
+        else: file_template.pop('current_sprite')
+
+        if 'None' not in generic_sprite_1:
+            file_template['generic_sprite_1'] = "self.generic_sprite_1.create_sprite('./GameData/Assets/"+generic_sprite_1+"')"
+        else: file_template.pop("generic_sprite_1")
+
+        if 'None' not in generic_sprite_2:
+            file_template['generic_sprite_2'] = "self.generic_sprite_2.create_sprite('./GameData/Assets/"+generic_sprite_2+"')"
+        else: file_template.pop("generic_sprite_2")
+
+        if 'None' not in generic_sprite_3:
+            file_template['generic_sprite_3'] = "self.generic_sprite_3.create_sprite('./GameData/Assets/"+generic_sprite_3+"')"
+        else: file_template.pop("generic_sprite_3")
+
+        if 'None' not in generic_sprite_4:
+            file_template['generic_sprite_4'] = "self.generic_sprite_4.create_sprite('./GameData/Assets/"+generic_sprite_4+"')"
+        else: file_template.pop("generic_sprite_4")
 
         file_template['object_json_file'] = "self.save_state.object_json_file='./GameData/jsons/" + file_name.rstrip('.py')+".json'"
         
