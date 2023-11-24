@@ -35,7 +35,7 @@ class ComboBoxUIComponent:
         self.entries.clear()
         self.y_gap = 0
         self.selected_index = 0
-        
+
     def draw_combo_box(self,screen):
         if len(self.entries) > 0:
 
@@ -74,14 +74,24 @@ class ComboBoxUIComponent:
         d_inputs = kwargs['InputDict']
         mouse_position = pygame.mouse.get_pos()
 
-        if self.sensing_rect is not None and self.sensing_rect.collidepoint(mouse_position):
-            self.entries[self.selected_index][COLOR] = self.entry_selected_color
+        if len(self.entries) > 0 and self.sensing_rect is not None and self.sensing_rect.collidepoint(mouse_position):
+            try:
+                self.entries[self.selected_index][COLOR] = self.entry_selected_color
 
-            if d_inputs['left-click'] and not d_inputs['left_click_latch'] and not self.show_entries:        
-                self.show_entries = True
-                d_inputs['left_click_latch'] = True
-        else:
-            self.entries[self.selected_index][COLOR] = self.entry_unselected_color
+     
+                if d_inputs['left-click'] and not d_inputs['left_click_latch'] and not self.show_entries:        
+                    self.show_entries = True
+                    d_inputs['left_click_latch'] = True
+
+            except Exception as Error:
+                print(Error)
+                
+        elif len(self.entries) > 0:
+            try:
+
+                self.entries[self.selected_index][COLOR] = self.entry_unselected_color
+            except Exception as Error:
+                print(Error)
 
         if self.show_entries:
             for entry in self.entries:
