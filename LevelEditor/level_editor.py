@@ -137,8 +137,8 @@ class LevelEditor:
         self.delete_scene_button.sprite.position = Vector(20, self.screen_height+64)
         self.reload_scene_button.sprite.position = Vector(20,self.screen_height+98)
 
-        self.save_object_button.sprite.position = Vector(self.screen_width*.4+50,self.screen_height/2+128)
-        self.cancel_save_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/2+128)
+        self.save_object_button.sprite.position = Vector(self.screen_width*.4+50,self.screen_height/2+320)
+        self.cancel_save_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/2+320)
         self.file_dialog_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/8 + 58)
 
         # create sprite sheet rects
