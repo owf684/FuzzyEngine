@@ -37,7 +37,7 @@ class Vector:
       raise TypeError("Unsupported operand type")    
 
   def __repr__(self):
-    return ("x: " + str (self.x) + " y: " + str(self.y) )
+    return ("Vector(" + str (self.x) + "," + str(self.y) + ")" )
 
   def __call__(self):
     return deepcopy(self)
