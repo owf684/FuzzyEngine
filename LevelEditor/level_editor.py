@@ -62,6 +62,10 @@ class LevelEditor:
         self.save_object_button = button_ui_component.ButtonUIComponent()
         self.cancel_save_button = button_ui_component.ButtonUIComponent()
         self.file_dialog_button = button_ui_component.ButtonUIComponent()
+        self.generic_1_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
+        self.generic_2_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
+        self.generic_3_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
+        self.generic_4_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
 
         self.l_button_ui_elements = {}
         self.setup_button_ui()
@@ -119,10 +123,18 @@ class LevelEditor:
         self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png",2,Vector(32,32))
         self.file_dialog_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/folder_dialog.png",2,Vector(32,32))
         self.collision_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/collision_button.png",2,Vector(32,32))
+        self.generic_1_sprite_sheet_switch.sprite.create_sprite_sheet("./Assets/UI/Buttons/sprite_sheet_switch.png",2,Vector(32,32))
+        self.generic_2_sprite_sheet_switch.sprite.create_sprite_sheet("./Assets/UI/Buttons/sprite_sheet_switch.png",2,Vector(32,32))
+        self.generic_3_sprite_sheet_switch.sprite.create_sprite_sheet("./Assets/UI/Buttons/sprite_sheet_switch.png",2,Vector(32,32))
+        self.generic_4_sprite_sheet_switch.sprite.create_sprite_sheet("./Assets/UI/Buttons/sprite_sheet_switch.png",2,Vector(32,32))
 
         self.save_object_button.render = False
         self.cancel_save_button.render = False
         self.file_dialog_button.render = False
+        self.generic_1_sprite_sheet_switch.render = False
+        self.generic_2_sprite_sheet_switch.render = False
+        self.generic_3_sprite_sheet_switch.render = False
+        self.generic_4_sprite_sheet_switch.render = False
 
         # setup positions
         self.play_pause_position = Vector(self.screen_width,25)
@@ -140,6 +152,10 @@ class LevelEditor:
         self.save_object_button.sprite.position = Vector(self.screen_width*.2+50,self.screen_height/2+300)
         self.cancel_save_button.sprite.position = Vector(self.screen_width*.2+650,self.screen_height*.15)
         self.file_dialog_button.sprite.position = Vector(self.screen_width*.4+200,self.screen_height/8 + 58)
+        self.generic_1_sprite_sheet_switch.sprite.position = Vector(self.screen_width*.2+660,self.screen_height*.15+105)
+        self.generic_2_sprite_sheet_switch.sprite.position = Vector(self.screen_width*.2+660,self.screen_height*.15+170)
+        self.generic_3_sprite_sheet_switch.sprite.position = Vector(self.screen_width*.2+660,self.screen_height*.15+235)
+        self.generic_4_sprite_sheet_switch.sprite.position = Vector(self.screen_width*.2+660,self.screen_height*.15+300)
 
         # create sprite sheet rects
         self.play_pause_button.sprite.create_sprite_sheet_rect()
@@ -154,6 +170,10 @@ class LevelEditor:
         self.file_dialog_button.sprite.create_sprite_sheet_rect()
         self.remove_object_button.sprite.create_sprite_sheet_rect()
         self.collision_button.sprite.create_sprite_sheet_rect()
+        self.generic_1_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
+        self.generic_2_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
+        self.generic_3_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
+        self.generic_4_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
 
 
         # add to ui element
@@ -168,7 +188,13 @@ class LevelEditor:
                                      'cancel-save': self.cancel_save_button,
                                      'file-dialog': self.file_dialog_button,
                                      'remove-object': self.remove_object_button,
-                                     'collision-button': self.collision_button  }
+                                     'collision-button': self.collision_button,
+                                     'generic_1_sprite_switch': self.generic_1_sprite_sheet_switch,
+                                     'generic_2_sprite_switch': self.generic_2_sprite_sheet_switch,
+                                     'generic_3_sprite_switch': self.generic_3_sprite_sheet_switch,
+                                     'generic_4_sprite_switch': self.generic_4_sprite_sheet_switch,
+                                    
+ }
     
 
         
