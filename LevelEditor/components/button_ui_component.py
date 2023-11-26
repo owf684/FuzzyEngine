@@ -6,7 +6,7 @@ from vector import Vector
 
 class ButtonUIComponent:
 
-    def __init__(self):
+    def __init__(self, switch=False):
         # get display info
         self.display_info = pygame.display.Info()
         self.screen_width = int(self.display_info.current_w*.8)
@@ -16,23 +16,42 @@ class ButtonUIComponent:
         self.button_state = ButtonState(0,1)
         self.button_signal = ButtonSignal()
         self.toggled = False
-
+        self.switch = switch
         self.render = True
+
     def set_animation_state(self,d_inputs):
 
         mouse_position = pygame.mouse.get_pos()
-        # update animation if mouse hovers over button
-        if self.sprite.rect.collidepoint(mouse_position):
-            self.sprite.animation_state = self.button_state.state_1
-        else:
-            self.sprite.animation_state = self.button_state.state_2
 
-        if self.sprite.rect.collidepoint(mouse_position):
-             if d_inputs['left-click'] and not d_inputs['left_click_latch']:
-                d_inputs['left_click_latch'] = True
-                self.toggled = True                    
+        # default button behavior
+        if not self.switch:
+
+            if self.sprite.rect.collidepoint(mouse_position):
+                self.sprite.animation_state = self.button_state.state_1
+            else:
+                self.sprite.animation_state = self.button_state.state_2
+
+            if self.sprite.rect.collidepoint(mouse_position):
+                 if d_inputs['left-click'] and not d_inputs['left_click_latch']:
+                    d_inputs['left_click_latch'] = True
+                    self.toggled = True
+
+        # switch button behavior 
+        elif self.switch:
+            if self.sprite.rect.collidepoint(mouse_position):
+
+                if d_inputs['left-click'] and not d_inputs['left_click_latch'] and not self.toggled:
+                    d_inputs['left_click_latch'] = True
+                    self.toggled = True
+                    self.sprite.animation_state = self.button_state.state_2
+                if d_inputs['left-click'] and not d_inputs['left_click_latch'] and self.toggled:
+                    d_inputs['left_click_latch'] = True
+                    self.toggled = False
+                    self.sprite.animation_state = self.button_state.state_1
+
+        # update latch
         if not d_inputs['left-click'] and d_inputs['left_click_latch']:
-            d_inputs['left_click_latch'] = False
+            d_inputs['left_click_latch'] = False                
 
     def draw_button(self,screen):
         if len(self.sprite.sprite_sheet)>0:
@@ -94,6 +113,15 @@ class ButtonUIComponent:
                 if self.toggled:
                     self.toggled = False
                     self.button_signal.send(**kwargs)
+
+            case 'generic_1_sprite_switch':
+                self.button_signal.send(**kwargs)
+            case 'generic_2_sprite_switch':
+                self.button_signal.send(**kwargs)
+            case 'generic_3_sprite_switch':
+                self.button_signal.send(**kwargs)
+            case 'generic_4_sprite_switch':
+                self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -154,7 +182,20 @@ class ButtonSignal:
                     level_editor.object_container_ui.init_ui(level_editor.c_object_creator)
             case 'collision-button':
                 level_editor.draw_colliders = not level_editor.draw_colliders
-                            
+
+            case 'generic_1_sprite_switch':
+                level_editor.c_object.generic_1_sprite_is_sheet = level_editor.generic_1_sprite_sheet_switch.toggled
+
+            case 'generic_2_sprite_switch':
+                level_editor.c_object.generic_2_sprite_is_sheet = level_editor.generic_2_sprite_sheet_switch.toggled
+
+            case 'generic_3_sprite_switch':
+                level_editor.c_object.generic_3_sprite_is_sheet = level_editor.generic_3_sprite_sheet_switch.toggled
+                                                        
+
+            case 'generic_4_sprite_switch':
+                level_editor.c_object.generic_4_sprite_is_sheet = level_editor.generic_4_sprite_sheet_switch.toggled
+                                                        
             case _:
                 None
 
