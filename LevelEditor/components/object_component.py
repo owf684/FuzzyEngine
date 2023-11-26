@@ -34,6 +34,10 @@ class ObjectComponent:
         self.skip_update_2 = False
         self.current_cb = 0
         self.current_cb_2 = 0
+        self.generic_1_sprite_is_sheet = False
+        self.generic_2_sprite_is_sheet = False
+        self.generic_3_sprite_is_sheet = False
+        self.generic_4_sprite_is_sheet = False     
 
         self.sprite_dir_combo_box = list()
         y_pos = 64
@@ -122,6 +126,10 @@ class ObjectComponent:
                 i -= 1
             self.l_button_ui_elements['save-object'].render = True
             self.l_button_ui_elements['cancel-save'].render = True
+            self.l_button_ui_elements['generic_1_sprite_switch'].render = True
+            self.l_button_ui_elements['generic_2_sprite_switch'].render = True
+            self.l_button_ui_elements['generic_3_sprite_switch'].render = True
+            self.l_button_ui_elements['generic_4_sprite_switch'].render = True
 
             if  self.add_text_boxes and self.sprite_dir_combo_box[-1].show_entries and len(self.sprite_dir_combo_box[-1].entries) >=2:
                 self.class_name_value = self.l_text_boxes[-1].userInput
@@ -169,6 +177,10 @@ class ObjectComponent:
         self.l_button_ui_elements['save-object'].render = False
         self.l_button_ui_elements['cancel-save'].render = False
         self.l_button_ui_elements['file-dialog'].render = False
+        self.l_button_ui_elements['generic_1_sprite_switch'].render = False
+        self.l_button_ui_elements['generic_2_sprite_switch'].render = False
+        self.l_button_ui_elements['generic_3_sprite_switch'].render = False
+        self.l_button_ui_elements['generic_4_sprite_switch'].render = False
         self.class_name_value = ''
         self.current_sprite_cb.clear()
 
@@ -177,13 +189,10 @@ class ObjectComponent:
 
     def save_object(self):
         current_sprite = self.sprite_cb[0][self.sprite_dir_cb_index[0]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[0]].get_value()
-        generic_sprite_1 = self.sprite_cb[0][self.sprite_dir_cb_index[1]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[1]].get_value()
-        generic_sprite_2 = self.sprite_cb[0][self.sprite_dir_cb_index[2]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[2]].get_value()
-        generic_sprite_3 = self.sprite_cb[0][self.sprite_dir_cb_index[3]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[3]].get_value()
-        generic_sprite_4 = self.sprite_cb[0][self.sprite_dir_cb_index[4]].get_directory() + "/" + self.sprite_cb[0][self.sprite_dir_cb_index[4]].get_value()
-       
-       
-       
+        generic_sprite_1 = self.sprite_cb[1][self.sprite_dir_cb_index[1]].get_directory() + "/" + self.sprite_cb[1][self.sprite_dir_cb_index[1]].get_value()
+        generic_sprite_2 = self.sprite_cb[2][self.sprite_dir_cb_index[2]].get_directory() + "/" + self.sprite_cb[2][self.sprite_dir_cb_index[2]].get_value()
+        generic_sprite_3 = self.sprite_cb[3][self.sprite_dir_cb_index[3]].get_directory() + "/" + self.sprite_cb[3][self.sprite_dir_cb_index[3]].get_value()
+        generic_sprite_4 = self.sprite_cb[4][self.sprite_dir_cb_index[4]].get_directory() + "/" + self.sprite_cb[4][self.sprite_dir_cb_index[4]].get_value()
        
         object_class =self.l_text_boxes[0].userInput
         object_category = self.category_combo_box.get_value()
@@ -222,7 +231,7 @@ class ObjectComponent:
         file_name += '.py'
                 
         # update file template
-        file_template = object_template.file_template
+        file_template = object_template.get_file_template()
         file_template['parent_object'] = "import " + object_category
         file_template['class_define'] = 'class ' + object_class + '(' + object_category + "." + object_template.object_categories[object_category] + "):"
         
@@ -231,20 +240,55 @@ class ObjectComponent:
         else: file_template.pop('current_sprite')
 
         if 'None' not in generic_sprite_1:
-            file_template['generic_sprite_1'] = "self.generic_sprite_1.create_sprite('./GameData/Assets/"+generic_sprite_1+"')"
-        else: file_template.pop("generic_sprite_1")
-
+            if self.generic_1_sprite_is_sheet:
+                file_template['generic_sprite_1'] = ("self.generic_sprite_1.create_sprite_sheet('./GameData/Assets/"+generic_sprite_1,1,Vector(32,32))
+      
+            else:
+                file_template['generic_sprite_1'] = "self.generic_sprite_1.create_sprite('./GameData/Assets/"+generic_sprite_1+"')"  
+                file_template.pop('generic_sprite_1_position')
+                file_template.pop("generic_sprite_1_rect")            
+        else: 
+            file_template.pop("generic_sprite_1")
+            file_template.pop('generic_sprite_1_position')
+            file_template.pop("generic_sprite_1_rect")
         if 'None' not in generic_sprite_2:
-            file_template['generic_sprite_2'] = "self.generic_sprite_2.create_sprite('./GameData/Assets/"+generic_sprite_2+"')"
-        else: file_template.pop("generic_sprite_2")
+            if self.generic_2_sprite_is_sheet:
+                file_template['generic_sprite_2'] = ("self.generic_sprite_2.create_sprite_sheet('./GameData/Assets/"+generic_sprite_2,1,Vector(32,32))
 
+            else:
+                file_template['generic_sprite_2'] = "self.generic_sprite_2.create_sprite('./GameData/Assets/"+generic_sprite_2+"')" 
+                file_template.pop('generic_sprite_2_position')
+                file_template.pop("generic_sprite_2_rect") 
+        else: 
+            file_template.pop("generic_sprite_2")
+            file_template.pop('generic_sprite_2_position')
+            file_template.pop("generic_sprite_2_rect")
         if 'None' not in generic_sprite_3:
-            file_template['generic_sprite_3'] = "self.generic_sprite_3.create_sprite('./GameData/Assets/"+generic_sprite_3+"')"
-        else: file_template.pop("generic_sprite_3")
+            if self.generic_3_sprite_is_sheet:
+                file_template['generic_sprite_3'] = ("self.generic_sprite_3.create_sprite_sheet('./GameData/Assets/"+generic_sprite_3,1,Vector(32,32))
+
+            else:
+                file_template['generic_sprite_3'] = "self.generic_sprite_3.create_sprite('./GameData/Assets/"+generic_sprite_3+"')"     
+                file_template.pop('generic_sprite_3_position')
+                file_template.pop("generic_sprite_3_rect")
+        else: 
+            file_template.pop("generic_sprite_3")
+            file_template.pop('generic_sprite_3_position')
+            file_template.pop("generic_sprite_3_rect")
 
         if 'None' not in generic_sprite_4:
-            file_template['generic_sprite_4'] = "self.generic_sprite_4.create_sprite('./GameData/Assets/"+generic_sprite_4+"')"
-        else: file_template.pop("generic_sprite_4")
+            if self.generic_4_sprite_is_sheet:
+                file_template['generic_sprite_4'] = ("self.generic_sprite_4.create_sprite_sheet('./GameData/Assets/"+generic_sprite_4,1,Vector(32,32))
+
+            else:
+                file_template['generic_sprite_4'] = "self.generic_sprite_4.create_sprite('./GameData/Assets/"+generic_sprite_4+"')" 
+                file_template.pop('generic_sprite_4_position')
+                file_template.pop("generic_sprite_4_rect")
+
+        else: 
+            file_template.pop("generic_sprite_4")
+            file_template.pop('generic_sprite_4_position')
+            file_template.pop("generic_sprite_4_rect")
 
         file_template['object_json_file'] = "self.save_state.object_json_file='./GameData/jsons/" + file_name.rstrip('.py')+".json'"
         
