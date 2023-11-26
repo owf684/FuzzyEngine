@@ -36,6 +36,13 @@ class ObjectContainerUIComponent:
 
                 x_position += 64
                 self.l_object_editor_ui_elements.append(objects[0])
+
+                # clear generic sprites. these are non-ui elements
+                objects[0].generic_sprite_2.image = None
+                objects[0].generic_sprite_3.image = None
+                objects[0].generic_sprite_4.image = None
+
+
                 c_object_creator.update_editor_ui = True
 
     def draw_object_containers(self,screen):
