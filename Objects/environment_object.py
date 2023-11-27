@@ -4,6 +4,7 @@ import sprite_component
 import physics_component
 import collider_component
 import save_component
+import animation_component
 
 class EnvironmentObject:
 
@@ -23,3 +24,6 @@ class EnvironmentObject:
 
         # save state
         self.save_state = save_component.SaveComponent()
+                
+        # animation component
+        self.animator = animation_component.AnimationComponent()
