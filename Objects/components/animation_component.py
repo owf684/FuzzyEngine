@@ -16,7 +16,7 @@ class AnimationComponent:
             self.current_time_2 = 0
             self.elapsed_time_2 = 0
             self.last_frame_time_2 = 0
-            
+            self.which_sheet = 0
         except Exception as Error:
             print("ERROR::anim_util.py::__init__()", Error)
             
@@ -52,3 +52,12 @@ class AnimationComponent:
             self.frame_index = 0
         except Exception as Error:
             print("ERROR::anim_util.py::reset_time_variables", Error)
+
+    def trigger_generic_animation(self, i_generic_sprite):
+        # ensure only acceptable parameters are input
+        if i_generic_sprite > 4:
+            self.which_sheet = 4
+        elif i_generic_sprite < 0:
+            self.which_sheet = 0
+        else:
+            self.which_sheet = i_generic_sprite
