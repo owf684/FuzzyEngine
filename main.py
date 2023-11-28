@@ -11,6 +11,8 @@ sys.path.append("./LevelEditor")
 sys.path.append("./SpriteEngine")
 sys.path.append("./CollisionEngine")
 sys.path.append("./AnimationEngine")
+sys.path.append("./ScrollEngine")
+
 import input_engine
 import graphics_engine
 import player_object
@@ -20,6 +22,8 @@ import level_editor
 import sprite_engine
 import collision_engine
 import animation_engine
+import scroll_engine
+
 
 '''Hungarian Notation
 e = engine
@@ -34,6 +38,7 @@ e_level_editor = level_editor.LevelEditor()
 e_sprite = sprite_engine.SpriteEngine()
 e_collision = collision_engine.CollisionEngine()
 e_animation = animation_engine.AnimationEngine()
+e_scroll  =scroll_engine.ScrollEngine()
 
 l_game_objects = list()
 
@@ -72,6 +77,9 @@ while running:
       e_sprite.update(GameObject=objects,DeltaT=delta_t)
       e_player.update(InputDict=input_dict,PlayerObject=objects,DeltaT=delta_t)
       e_animation.update(GameObject=objects)
+      e_scroll.update(GameObject=objects)
+
+  e_scroll.scroll_objects(GameObjects=l_game_objects,LevelEditor=e_level_editor)
 
   e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects,GraphicsEngine=e_graphics)
   delta_t = clock.tick(FPS)/1000
