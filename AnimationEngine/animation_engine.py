@@ -32,22 +32,21 @@ class AnimationEngine:
     def set_current_sprite(self,objects,generic_sprite):
         try:
 
-            if generic_sprite.sprite_sheet is not None:
+            if len(generic_sprite.sprite_sheet) > 0:
 
                 objects.animator.determine_frame_count()
         
-                if objects.physics.direction.x == -1:
+                if objects.animator.direction_x == -1:
                     objects.current_sprite.image = pygame.transform.flip(generic_sprite.sprite_sheet[objects.animator.frame_index],True,False)
                 else:
                     objects.current_sprite.image = generic_sprite.sprite_sheet[objects.animator.frame_index]
             elif generic_sprite.image is not None:
-                if objects.physics.direction.x == -1:
+                if objects.animator.direction_x == -1:
                     objects.current_sprite.image = pygame.transform.flip(generic_sprite.image,True,False)
                 else:
                     objects.current_sprite.image = generic_sprite.image
             
         except Exception as Error:
-            print(Error)
-            print(len(generic_sprite.sprite_sheet),objects.animator.frame_index)
+            print(objects.animator.which_sheet)
 
 
