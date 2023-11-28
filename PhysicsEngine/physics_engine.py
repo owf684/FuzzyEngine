@@ -88,7 +88,10 @@ class PhysicsEngine:
         '''
    
         # calculate x position
-        game_object.physics.position.x = game_object.physics.initial_position.x + ( game_object.physics.initial_velocity.x * delta_t ) +  ( 0.5 * game_object.physics.acceleration.x * pow(delta_t,2) )
+        game_object.physics.displacement.x = ( game_object.physics.initial_velocity.x * delta_t ) +  ( 0.5 * game_object.physics.acceleration.x * pow(delta_t,2) )
+
+        if not game_object.physics.pause_x_position:
+            game_object.physics.position.x = game_object.physics.initial_position.x + game_object.physics.displacement.x
 
         # calculate y position
         game_object.physics.position.y = game_object.physics.initial_position.y + ( game_object.physics.initial_velocity.y * delta_t ) +  ( 0.5 * game_object.physics.acceleration.y * pow(delta_t,2) ) 
