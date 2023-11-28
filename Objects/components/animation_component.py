@@ -17,6 +17,7 @@ class AnimationComponent:
             self.elapsed_time_2 = 0
             self.last_frame_time_2 = 0
             self.which_sheet = 0
+            self.direction_x = 0
         except Exception as Error:
             print("ERROR::anim_util.py::__init__()", Error)
             
@@ -61,3 +62,7 @@ class AnimationComponent:
             self.which_sheet = 0
         else:
             self.which_sheet = i_generic_sprite
+
+    def set_direction(self,physics):
+        if abs(physics.direction.x) > 0:
+            self.direction_x = physics.direction.x
