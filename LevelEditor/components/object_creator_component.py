@@ -58,8 +58,7 @@ class ObjectCreatorComponent:
 				file_extension = os.path.splitext(json_file)[1]
 				if file_extension.lower() == '.json':
 					self.l_json_modules.append(os.path.join(root,json_file))
-		print(len(self.l_json_modules))
-					
+
 	def create_objects_dict(self):	
 		for json_module in self.l_json_modules:
 		
@@ -152,7 +151,6 @@ class ObjectCreatorComponent:
 			
 	def destroy_selected_object(self):
 		selected_object = self.get_selected_object()[1]
-		print(selected_object)
 		reset_ui = False
 		for root, dirs, files in os.walk("./"):
 			for file in files:
