@@ -74,12 +74,12 @@ while running:
     for objects in e_graphics.render_buffer:
       e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
       e_physics.update(GameObject=objects,DeltaT=delta_t)
-      e_sprite.update(GameObject=objects,DeltaT=delta_t)
+      e_sprite.aupdate(GameObject=objects,DeltaT=delta_t)
       e_player.update(InputDict=input_dict,PlayerObject=objects,DeltaT=delta_t)
       e_animation.update(GameObject=objects)
       e_scroll.update(GameObject=objects)
 
-  e_scroll.scroll_objects(GameObjects=l_game_objects,LevelEditor=e_level_editor)
+  e_scroll.scroll_objects(GameObjects=l_game_objects,LevelEditor=e_level_editor,InputDict=input_dict)
 
   e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects,GraphicsEngine=e_graphics)
   delta_t = clock.tick(FPS)/1000
