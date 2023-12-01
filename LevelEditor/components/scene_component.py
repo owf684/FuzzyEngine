@@ -120,7 +120,6 @@ class SceneComponent:
         self.game_objects.clear()
         self.e_graphics.render_buffer.clear()
         for object_jsons in scene_objects:
-            print(object_jsons)
             with open(object_jsons,'r') as json_file:
                 object_data = json.load(json_file)
             if object_data is not None:
