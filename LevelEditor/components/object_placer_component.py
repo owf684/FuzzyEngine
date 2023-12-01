@@ -60,5 +60,7 @@ class ObjectPlacerComponent:
         game_objects[-1].physics.initial_position.y = snap_position[1]
         game_objects[-1].physics.position = game_objects[-1].physics.initial_position()
         game_objects[-1].current_sprite.update(game_objects[-1].physics.initial_position())
+        game_objects[-1].physics.initial_position.x += level_editor.grid.scroll_offset
         game_objects[-1].save_state.initial_position = game_objects[-1].physics.initial_position()
+
         
