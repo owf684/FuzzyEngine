@@ -122,6 +122,8 @@ class ButtonUIComponent:
                 self.button_signal.send(**kwargs)
             case 'generic_4_sprite_switch':
                 self.button_signal.send(**kwargs)
+            case 'grid_move_switch':
+                self.button_signal.send(**kwargs)
             case _:
                 None
             
@@ -160,6 +162,8 @@ class ButtonSignal:
                 level_editor.c_scene.delete_scene()
             case 'reload-scene':
                 level_editor.c_scene.load_scene()
+                level_editor.grid.reset_scroll = True
+
             case 'save-object':
                 level_editor.c_object.save_object()
                 level_editor.object_placer.place_enabled = True
@@ -191,11 +195,13 @@ class ButtonSignal:
 
             case 'generic_3_sprite_switch':
                 level_editor.c_object.generic_3_sprite_is_sheet = level_editor.generic_3_sprite_sheet_switch.toggled
-                                                        
 
             case 'generic_4_sprite_switch':
                 level_editor.c_object.generic_4_sprite_is_sheet = level_editor.generic_4_sprite_sheet_switch.toggled
-                                                        
+
+            case 'grid_move_switch':
+                level_editor.scroll_in_edit = level_editor.grid_move_switch.toggled
+
             case _:
                 None
 
