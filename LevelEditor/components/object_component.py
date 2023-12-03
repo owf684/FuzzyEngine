@@ -28,6 +28,7 @@ class ObjectComponent:
         self.category_combo_box.add_entry("game_object")
         self.category_combo_box.add_entry("item_object")
         self.category_combo_box.add_entry("scene_object")
+        self.category_combo_box.add_entry("enemy_object")
         self.sprite_combo_box = combo_box_ui_component.ComboBoxUIComponent(200,25)
         self.sprite_combo_box.set_position(Vector(self.display_width*.2 + 250,self.display_height/8 + 64))
         self.skip_update = False
