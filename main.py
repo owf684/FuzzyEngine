@@ -12,7 +12,8 @@ sys.path.append("./SpriteEngine")
 sys.path.append("./CollisionEngine")
 sys.path.append("./AnimationEngine")
 sys.path.append("./ScrollEngine")
-
+sys.path.append("./AudioEngine")
+sys.path.append("./EnemyEngine")
 import input_engine
 import graphics_engine
 import player_object
@@ -23,7 +24,8 @@ import sprite_engine
 import collision_engine
 import animation_engine
 import scroll_engine
-
+import audio_engine
+import enemy_engine
 
 '''Hungarian Notation
 e = engine
@@ -38,7 +40,9 @@ e_level_editor = level_editor.LevelEditor()
 e_sprite = sprite_engine.SpriteEngine()
 e_collision = collision_engine.CollisionEngine()
 e_animation = animation_engine.AnimationEngine()
-e_scroll  =scroll_engine.ScrollEngine()
+e_scroll = scroll_engine.ScrollEngine()
+e_audio = audio_engine.AudioEngine()
+e_enemy = enemy_engine.EnemyEngine()
 
 l_game_objects = list()
 
@@ -74,9 +78,11 @@ while running:
     for objects in e_graphics.render_buffer:
       e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
       e_physics.update(GameObject=objects,DeltaT=delta_t)
-      e_sprite.aupdate(GameObject=objects,DeltaT=delta_t)
+      e_sprite.update(GameObject=objects,DeltaT=delta_t)
       e_player.update(InputDict=input_dict,PlayerObject=objects,DeltaT=delta_t)
+      e_enemy.update(GameObject=objects,ScrollEngine=e_scroll)
       e_animation.update(GameObject=objects)
+      e_audio.update(GameObject=objects)
       e_scroll.update(GameObject=objects)
 
   e_scroll.scroll_objects(GameObjects=l_game_objects,LevelEditor=e_level_editor,InputDict=input_dict)
