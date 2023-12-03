@@ -38,7 +38,8 @@ object_categories ={
     'environment_object': 'EnvironmentObject',
     'game_object': 'GameObject',
     'item_object': 'ItemObject',
-    'scene_object': 'SceneObject'
+    'scene_object': 'SceneObject',
+    'enemy_object': 'EnemyObject'
 }
 def get_file_template():
     return deepcopy(file_template)
