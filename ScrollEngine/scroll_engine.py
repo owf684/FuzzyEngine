@@ -2,7 +2,10 @@ import sys
 import pygame
 
 sys.path.append('./GameData/GameObjects')
+sys.path.append("./objects")
+import enemy_object
 import player_object
+
 from copy import deepcopy
 
 
@@ -47,7 +50,11 @@ class ScrollEngine:
 
             for objects in game_objects:
                 if not isinstance(objects, player_object.PlayerObject):
-                    objects.physics.position.x -= self.displacement_x
+                    if objects.physics.pause:
+
+                        objects.physics.position.x -= self.displacement_x
+                    else:
+                        objects.physics.initial_position.x -= self.displacement_x
 
         if level_editor.edit and level_editor.scroll_in_edit:
             if abs(input_dict['horizontal']) > 0:
@@ -57,8 +64,15 @@ class ScrollEngine:
                     self.displacement_x = 1*input_dict['horizontal']
                 self.scroll_offset += self.displacement_x
                 for objects in game_objects:
-                    objects.physics.position.x -= self.displacement_x
-                    objects.current_sprite.update(objects.physics.position)
+                    if objects.physics.pause:
+
+                        objects.physics.position.x -= self.displacement_x
+                        objects.current_sprite.update(objects.physics.position)
+
+                    else:
+                        objects.physics.initial_position.x -= self.displacement_x
+                        objects.current_sprite.update(objects.physics.initial_position)
+
         if level_editor.grid.reset_scroll:
             self.scroll_offset = 0
             level_editor.grid.reset_scroll = False
