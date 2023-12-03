@@ -5,6 +5,7 @@ import physics_component
 import collider_component
 import save_component
 import animation_component
+import audio_component
 
 class SceneObject:
 
@@ -27,3 +28,6 @@ class SceneObject:
 
         # animation component
         self.animator = animation_component.AnimationComponent()
+
+        # audio component
+        self.audio = audio_component.AudioComponent()
