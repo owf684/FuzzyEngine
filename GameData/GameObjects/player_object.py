@@ -31,6 +31,10 @@ class PlayerObject(game_object.GameObject):
         self.cap_jump_velocity= False
         self.jumping = False
 
+        self.audio_dir ="./GameData/Assets/Audio"
+
+        self.audio.load_audio('small-jump', self.audio_dir+"/MarioFX/smb_jump-small.wav")
+
     def update(self, **kwargs):
         # get relevant variables
         input_dict = kwargs['InputDict']
@@ -38,8 +42,9 @@ class PlayerObject(game_object.GameObject):
 
         # update object
         self.x_movement(input_dict)
-        self.y_movement(input_dict,delta_t)
-        self.animate(input_dict)
+        self.y_movement(input_dict, delta_t)
+        self.animation_handler(input_dict)
+        self.audio_handler()
 
 
     def x_movement(self,input_dict):
@@ -66,7 +71,7 @@ class PlayerObject(game_object.GameObject):
             self.physics.direction.y = input_dict['vertical']
             self.cap_jump_velocity = False
     
-    def animate(self,input_dict):
+    def animation_handler(self,input_dict):
         # update direction
         self.animator.set_direction(self.physics)
 
@@ -85,12 +90,22 @@ class PlayerObject(game_object.GameObject):
                 self.animator.trigger_generic_animation(2)
 
             # set jump flag
-            if input_dict['vertical'] == 1:
+            if input_dict['vertical'] == 1 and self.collider.down:
                 self.jumping = True
 
         # jump animation
         if self.jumping and not self.collider.down:
             self.animator.trigger_generic_animation(3)
+
+    def audio_handler(self):
+
+        # jump audio
+        if self.jumping and self.collider.down and not self.audio.triggered['small-jump']:
+            self.audio.queue_audio('small-jump')
+
+        if not self.jumping and self.collider.down:
+            self.audio.triggered['small-jump'] = False
+
 
 
 def create_object():
