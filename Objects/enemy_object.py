@@ -34,20 +34,22 @@ class EnemyObject:
         # audio component
         self.audio = audio_component.AudioComponent()
 
+        # destroy variable removes object from game
+        self.destroy = False
 
         # enemy specific initializers
-        self.physics.direction.x = 1
-        self.walking_force = 50
+        self.physics.direction.x = -1
 
+        self.walking_velocity = 50
+
+        self.is_hit = False
 
     def generic_enemy_ai(self):
-        
-        self.physics.initial_velocity.x =self.walking_force*self.physics.direction.x
+
+        self.physics.initial_velocity.x = self.walking_velocity * self.physics.direction.x
 
         if self.physics.direction.x == 1 and self.collider.right:
             self.physics.direction.x = -1
 
         if self.physics.direction.x == -1 and self.collider.left:
             self.physics.direction.x = 1
-
-
