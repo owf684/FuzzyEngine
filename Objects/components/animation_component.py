@@ -55,6 +55,9 @@ class AnimationComponent:
             print("ERROR::anim_util.py::reset_time_variables", Error)
 
     def trigger_generic_animation(self, i_generic_sprite):
+        # capture frame time
+        self.last_frame_time_2 = pygame.time.get_ticks()
+
         # ensure only acceptable parameters are input
         if i_generic_sprite > 4:
             self.which_sheet = 4
