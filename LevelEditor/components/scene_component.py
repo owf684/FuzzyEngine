@@ -118,7 +118,8 @@ class SceneComponent:
         working_scene_directory = self.scene_directory+"scene_"+str(self.working_scene)
         scene_objects = glob.glob(working_scene_directory+"/*.json")
         self.game_objects.clear()
-        self.e_graphics.render_buffer.clear()
+        self.e_graphics.clear_render_buffer = True
+
         for object_jsons in scene_objects:
             with open(object_jsons,'r') as json_file:
                 object_data = json.load(json_file)
