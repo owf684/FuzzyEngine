@@ -1,56 +1,81 @@
+import sys
+
+sys.path.append("./Objects")
+import scene_object
 
 
 class CollisionEngine:
 
-
     def __init__(self):
         None
 
-    def update(self,**kwargs):
+    def update(self, **kwargs):
         current_object = kwargs['CurrentObject']
         render_buffer = kwargs['RenderBuffer']
         current_object.collider.reset()
         for other in render_buffer:
-            if current_object != other:
-                if current_object.current_sprite.rect.colliderect(other.current_sprite.rect):
-                    self.detect_up_collisions(current_object,other)
-                    self.detect_right_collisions(current_object,other)
-                    self.detect_down_collisions(current_object,other)
-                    self.detect_left_collisions(current_object,other)
+            if (current_object != other
+                and not isinstance(other, scene_object.SceneObject)
+                and not isinstance(current_object, scene_object.SceneObject)) \
+                    and not current_object.collider.all_off:
+
+                if current_object.current_sprite.rect.colliderect(other.current_sprite.rect) \
+                        and not other.collider.pass_through:
+
+                    if not current_object.collider.up_off:
+                        self.detect_up_collisions(current_object, other)
+
+                    if not current_object.collider.right_off:
+                        self.detect_right_collisions(current_object, other)
+
+                    if not current_object.collider.down_off:
+                        self.detect_down_collisions(current_object, other)
+
+                    if not current_object.collider.left_off:
+                        self.detect_left_collisions(current_object, other)
 
 
-    def detect_up_collisions(self,current_object,other):
+    def detect_up_collisions(self, current_object, other):
         if current_object.current_sprite.rect.top < other.current_sprite.rect.bottom \
-            and current_object.current_sprite.rect.bottom > other.current_sprite.rect.bottom \
-                and (other.current_sprite.rect.left < current_object.current_sprite.rect.centerx < other.current_sprite.rect.right \
-                     or other.current_sprite.rect.left < current_object.current_sprite.rect.left+10 < other.current_sprite.rect.right \
-                        or other.current_sprite.rect.left < current_object.current_sprite.rect.right-10 < other.current_sprite.rect.right):
-                current_object.collider.up = True  
+                and current_object.current_sprite.rect.bottom > other.current_sprite.rect.bottom \
+                and (
+                other.current_sprite.rect.left < current_object.current_sprite.rect.centerx < other.current_sprite.rect.right \
+                or other.current_sprite.rect.left < current_object.current_sprite.rect.left + 10 < other.current_sprite.rect.right \
+                or other.current_sprite.rect.left < current_object.current_sprite.rect.right - 10 < other.current_sprite.rect.right):
+            current_object.collider.up = True
+            current_object.collider.up_collision_object = other
 
-    def detect_right_collisions(self,current_object,other):
+    def detect_right_collisions(self, current_object, other):
         if current_object.current_sprite.rect.right > other.current_sprite.rect.left \
-            and current_object.current_sprite.rect.left < other.current_sprite.rect.left \
-            and (other.current_sprite.rect.top < current_object.current_sprite.rect.centery < other.current_sprite.rect.bottom \
-            or other.current_sprite.rect.top < current_object.current_sprite.rect.top+10 < other.current_sprite.rect.bottom \
-            or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom-10< other.current_sprite.rect.bottom):
+                and current_object.current_sprite.rect.left < other.current_sprite.rect.left \
+                and (
+                other.current_sprite.rect.top < current_object.current_sprite.rect.centery < other.current_sprite.rect.bottom \
+                or other.current_sprite.rect.top < current_object.current_sprite.rect.top + 10 < other.current_sprite.rect.bottom \
+                or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom - 10 < other.current_sprite.rect.bottom):
             current_object.collider.right = True
-            current_object.physics.initial_position.x = other.current_sprite.rect.left-current_object.current_sprite.image.get_width()+1
+            current_object.collider.right_collision_object = other
+            if current_object.physics.direction.x <= 0:
+                current_object.physics.initial_position.x = other.current_sprite.rect.left - current_object.current_sprite.image.get_width() + 1
 
-    def detect_down_collisions(self,current_object,other):
+    def detect_down_collisions(self, current_object, other):
         if current_object.current_sprite.rect.bottom > other.current_sprite.rect.top \
-            and current_object.current_sprite.rect.top < other.current_sprite.rect.top \
-            and (other.current_sprite.rect.left < current_object.current_sprite.rect.centerx < other.current_sprite.rect.right \
-            or other.current_sprite.rect.left < current_object.current_sprite.rect.right-10 < other.current_sprite.rect.right \
-            or other.current_sprite.rect.left < current_object.current_sprite.rect.left+10 < other.current_sprite.rect.right):
-            current_object.collider.down = True                
-            current_object.physics.initial_position.y = other.current_sprite.rect.top-current_object.current_sprite.image.get_height() + 1
+                and current_object.current_sprite.rect.top < other.current_sprite.rect.top \
+                and (
+                other.current_sprite.rect.left < current_object.current_sprite.rect.centerx < other.current_sprite.rect.right \
+                or other.current_sprite.rect.left < current_object.current_sprite.rect.right - 10 < other.current_sprite.rect.right \
+                or other.current_sprite.rect.left < current_object.current_sprite.rect.left + 10 < other.current_sprite.rect.right):
+            current_object.collider.down = True
+            current_object.collider.down_collision_object = other
+            current_object.physics.initial_position.y = other.current_sprite.rect.top - current_object.current_sprite.image.get_height() + 1
 
-    def detect_left_collisions(self,current_object,other):
+    def detect_left_collisions(self, current_object, other):
         if current_object.current_sprite.rect.left < other.current_sprite.rect.right \
-            and current_object.current_sprite.rect.right > other.current_sprite.rect.right \
-            and (other.current_sprite.rect.top < current_object.current_sprite.rect.centery < other.current_sprite.rect.bottom \
-            or other.current_sprite.rect.top < current_object.current_sprite.rect.top+10 < other.current_sprite.rect.bottom\
-            or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom-10 < other.current_sprite.rect.bottom):
-                current_object.collider.left = True
+                and current_object.current_sprite.rect.right > other.current_sprite.rect.right \
+                and (
+                other.current_sprite.rect.top < current_object.current_sprite.rect.centery < other.current_sprite.rect.bottom \
+                or other.current_sprite.rect.top < current_object.current_sprite.rect.top + 10 < other.current_sprite.rect.bottom \
+                or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom - 10 < other.current_sprite.rect.bottom):
+            current_object.collider.left = True
+            current_object.collider.left_collision_object = other
+            if current_object.physics.direction.x >= 0:
                 current_object.physics.initial_position.x = other.current_sprite.rect.right
-            
