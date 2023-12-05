@@ -5,8 +5,6 @@ class PhysicsEngine:
     def __init__(self):
         self.gravity = -9.8*50
 
-
-
     def update(self,**kwargs):
         game_object = kwargs['GameObject']
         delta_t = kwargs['DeltaT']
@@ -34,7 +32,7 @@ class PhysicsEngine:
 
         # calculate net force x on object
             game_object.physics.net_force.x = game_object.physics.force.x - damping_force
-   	 
+
         # calculate x acceleration
             game_object.physics.acceleration.x = game_object.physics.net_force.x / game_object.physics.mass
 
@@ -71,11 +69,15 @@ class PhysicsEngine:
             game_object.physics.initial_velocity.y = 0
             game_object.physics.velocity.y = 0
             game_object.physics.net_force.y =0
-        if game_object.collider.right:
+        if game_object.collider.right and game_object.physics.direction.x >= 0:
+            game_object.physics.acceleration.x = 0
             game_object.physics.initial_velocity.x = 0
+            game_object.physics.velocity.x = 0
             game_object.physics.net_force.x = 0
-        if game_object.collider.left:
+        if game_object.collider.left and game_object.physics.direction.x <= 0:
+            game_object.physics.acceleration.x = 0
             game_object.physics.initial_velocity.x = 0
+            game_object.physics.velocity.x = 0
             game_object.physics.net_force.x = 0
 
 
