@@ -31,3 +31,6 @@ class EnvironmentObject:
 
         # audio component
         self.audio = audio_component.AudioComponent()
+
+        # destroy variable removes object from game
+        self.destroy = False
