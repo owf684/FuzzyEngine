@@ -32,10 +32,11 @@ e = engine
 l = list
 o = object
 '''
+
 e_inputs = input_engine.InputsEngine()
 e_graphics = graphics_engine.GraphicsEngine()
 e_physics = physics_engine.PhysicsEngine()
-e_player = player_engine.PlayerEngine() 
+e_player = player_engine.PlayerEngine()
 e_level_editor = level_editor.LevelEditor()
 e_sprite = sprite_engine.SpriteEngine()
 e_collision = collision_engine.CollisionEngine()
@@ -46,52 +47,46 @@ e_enemy = enemy_engine.EnemyEngine()
 
 l_game_objects = list()
 
-
 # Start clock
 clock = pygame.time.Clock()
 # simulation runtime variables
 pygame_events = None
 delta_t = 0
-FPS = 120  
-		
+FPS = 120
+
 # main game loop
 running = True
 
-
 while running:
 
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
-    if event.type == pygame.TEXTINPUT:
-      e_level_editor.text_box_ui.event = event
-    if event.type == pygame.KEYDOWN:
-      e_level_editor.text_box_ui.event = event
-    if event.type == pygame.MOUSEWHEEL:
-      e_level_editor.c_scene.event = event
-  input_dict = e_inputs.update()
-  
-  e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.TEXTINPUT:
+            e_level_editor.text_box_ui.event = event
+        if event.type == pygame.KEYDOWN:
+            e_level_editor.text_box_ui.event = event
+        if event.type == pygame.MOUSEWHEEL:
+            e_level_editor.c_scene.event = event
+    input_dict = e_inputs.update()
 
-  if not e_level_editor.edit:
-    
-    for objects in e_graphics.render_buffer:
-      e_collision.update(RenderBuffer=e_graphics.render_buffer,CurrentObject=objects)
-      e_physics.update(GameObject=objects,DeltaT=delta_t)
-      e_sprite.update(GameObject=objects,DeltaT=delta_t)
-      e_player.update(InputDict=input_dict,PlayerObject=objects,DeltaT=delta_t)
-      e_enemy.update(GameObject=objects,ScrollEngine=e_scroll)
-      e_animation.update(GameObject=objects)
-      e_audio.update(GameObject=objects)
-      e_scroll.update(GameObject=objects)
+    e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
 
-  e_scroll.scroll_objects(GameObjects=l_game_objects,LevelEditor=e_level_editor,InputDict=input_dict)
+    if not e_level_editor.edit:
 
-  e_level_editor.update(InputDict=input_dict,GameObjects=l_game_objects,GraphicsEngine=e_graphics)
-  delta_t = clock.tick(FPS)/1000
- 
+        for objects in e_graphics.render_buffer:
+            e_collision.update(RenderBuffer=e_graphics.render_buffer, CurrentObject=objects)
+            e_physics.update(GameObject=objects, DeltaT=delta_t)
+            e_sprite.update(GameObject=objects, DeltaT=delta_t)
+            e_player.update(InputDict=input_dict, PlayerObject=objects, DeltaT=delta_t)
+            e_enemy.update(GameObject=objects, ScrollEngine=e_scroll)
+            e_animation.update(GameObject=objects)
+            e_audio.update(GameObject=objects)
+            e_scroll.update(GameObject=objects)
+
+    e_scroll.scroll_objects(GameObjects=l_game_objects, LevelEditor=e_level_editor, InputDict=input_dict)
+
+    e_level_editor.update(InputDict=input_dict, GameObjects=l_game_objects, GraphicsEngine=e_graphics)
+    delta_t = clock.tick(FPS) / 1000
+
 pygame.quit()
-
-
-
-
