@@ -38,7 +38,23 @@ class ObjectPlacerComponent:
 
                 if self.object_exists(mouse_position,game_objects):
                     game_objects.remove(self.selected_object)
-        
+
+                if self.object_exists(mouse_position,e_graphics.scene_objects):
+                    e_graphics.scene_objects.remove(self.selected_object)
+
+                if self.object_exists(mouse_position,e_graphics.item_objects):
+                    e_graphics.item_objects.remove(self.selected_object)
+
+                if self.object_exists(mouse_position,e_graphics.enemy_objects):
+                    e_graphics.enemy_objects.remove(self.selected_object)
+
+                if self.object_exists(mouse_position,e_graphics.environment_objects):
+                    e_graphics.environment_objects.remove(self.selected_object)
+
+                if self.object_exists(mouse_position,e_graphics.game_objects):
+                    e_graphics.game_objects.remove(self.selected_object)
+
+
     def object_exists(self,mouse_position,game_objects):
         for objects in game_objects:
             if objects.current_sprite.rect.collidepoint(mouse_position):
