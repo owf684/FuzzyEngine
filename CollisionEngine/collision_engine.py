@@ -66,7 +66,8 @@ class CollisionEngine:
                 or other.current_sprite.rect.left < current_object.current_sprite.rect.left + 10 < other.current_sprite.rect.right):
             current_object.collider.down = True
             current_object.collider.down_collision_object = other
-            current_object.physics.initial_position.y = other.current_sprite.rect.top - current_object.current_sprite.image.get_height() + 1
+            if not current_object.collider.pass_through:
+                current_object.physics.initial_position.y = other.current_sprite.rect.top - current_object.current_sprite.image.get_height() + 1
 
     def detect_left_collisions(self, current_object, other):
         if current_object.current_sprite.rect.left < other.current_sprite.rect.right \
