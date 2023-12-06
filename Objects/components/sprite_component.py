@@ -48,9 +48,12 @@ class SpriteComponent:
         except Exception as Error:
             print("ERROR::anim_util.py::extract_frames", Error)        
       
-    def create_sprite_sheet_rect(self):
+    def create_sprite_sheet_rect(self,x_pos_offset= 0,y_pos_offset= 0, x_width_offset = 0, y_height_offset = 0):
         if len(self.sprite_sheet) > 0:
-            self.rect =pygame.Rect(self.position.x,self.position.y,self.sprite_sheet[self.animation_state].get_width(),self.sprite_sheet[self.animation_state].get_height())
+            self.rect =pygame.Rect(self.position.x+x_pos_offset,
+                                   self.position.y+y_pos_offset,
+                                   self.sprite_sheet[self.animation_state].get_width()+x_width_offset,
+                                   self.sprite_sheet[self.animation_state].get_height()+y_height_offset)
             self.image_size.x = self.sprite_sheet[self.animation_state].get_width()
             self.image_size.y = self.sprite_sheet[self.animation_state].get_height()
 
