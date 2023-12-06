@@ -44,6 +44,8 @@ class EnemyObject:
 
         self.is_hit = False
 
+        self.attack_by_enemy = False
+
     def generic_enemy_ai(self):
 
         self.physics.initial_velocity.x = self.walking_velocity * self.physics.direction.x
