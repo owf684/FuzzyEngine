@@ -136,14 +136,14 @@ class PlayerObject(game_object.GameObject):
 
     def damage_enemy(self):
 
-        if self.collider.down and isinstance(self.collider.down_collision_object, enemy_object.EnemyObject):
+        if self.collider.down and isinstance(self.collider.down_collision_object, enemy_object.EnemyObject) \
+            and not self.collider.down_collision_object.is_hit:
             self.collider.down_collision_object.is_hit = True
             self.collider.down_collision_object.collider.pass_through = True
             self.collider.down_collision_object.collider.left_off = True
             self.collider.down_collision_object.collider.right_off = True
             self.collider.down_collision_object.collider.up_off = True
-            self.physics.initial_velocity.y = -150
-            self.physics.initial_velocity.x = 150*self.animator.direction_x
+            self.physics.initial_velocity.y = -200
 
     def damage_handler(self):
         if isinstance(self.collider.left_collision_object,enemy_object.EnemyObject) \
