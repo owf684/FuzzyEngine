@@ -21,6 +21,8 @@ class koopa(enemy_object.EnemyObject):
         self.generic_sprite_2.position = Vector(0, 0)
         self.generic_sprite_2.create_sprite_sheet_rect(y_height_offset=10)
         self.generic_sprite_3.create_sprite('./GameData/Assets/Enemies/KoopaTroopa/states/KoopaShell.png')
+        self.current_sprite.rect = self.generic_sprite_1.rect
+
         self.physics.pause = False
         self.animator.frame_count = 2
         self.animator.frame_duration = 150
@@ -77,6 +79,10 @@ class koopa(enemy_object.EnemyObject):
             self.physics.initial_velocity.x = 0
             if self.koopa_state == 0:
                 self.koopa_state = 1
+        if self.collider.up and isinstance(self.collider.up_collision_object,player_object.PlayerObject):
+            if self.koopa_state == 5:
+                self.sliding = False
+                self.koopa_state = 1
 
     def slide(self):
         if 1 <= self.koopa_state <= 3:
@@ -84,16 +90,25 @@ class koopa(enemy_object.EnemyObject):
                 self.koopa_state = 4
             if self.collider.right and isinstance(self.collider.right_collision_object, player_object.PlayerObject):
                 self.koopa_state = 4
+            if self.collider.up and isinstance(self.collider.up_collision_object,player_object.PlayerObject):
+                self.koopa_state = 4
+                if self.collider.up_collision_object.animator.direction_x == 1:
+                    self.physics.direction.x = 1
+                else:
+                    self.physics.direction.x = -1
             if self.koopa_state == 4:
                 self.sliding = True
+            
 
         if self.sliding:
 
-            self.physics.initial_velocity.x = 350 * self.physics.direction.x
             if self.collider.right and not isinstance(self.collider.right_collision_object,enemy_object.EnemyObject):
                 self.physics.direction.x = -1
             if self.collider.left and not isinstance(self.collider.left_collision_object, enemy_object.EnemyObject):
                 self.physics.direction.x = 1
+
+            self.physics.initial_velocity.x = 300 * self.physics.direction.x
+            
 
     def damage_enemy(self):
         if self.sliding:
@@ -101,6 +116,10 @@ class koopa(enemy_object.EnemyObject):
                 self.collider.left_collision_object.attack_by_enemy = True
             if self.collider.right and isinstance(self.collider.right_collision_object,enemy_object.EnemyObject):
                 self.collider.right_collision_object.attack_by_enemy = True
+            self.collider.left_off = False
+            self.collider.right_off = False
+            self.collider.up_off = False
+            self.collider.pass_through = False
 
 def create_object():
     return koopa()
