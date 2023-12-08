@@ -7,9 +7,22 @@ import player_object
 import enemy_object
 from vector import Vector
 
+
+# Animation Variables
+global WALK
+WALK = 1
+global SQUASHED
+SQUASHED = 2
+global UPSIDE_DOWN
+UPSIDE_DOWN = 3
+
+
 class goomba(enemy_object.EnemyObject):
     def __init__(self):
         super().__init__()
+
+
+        # Animation Components
         self.current_sprite.create_sprite('./GameData/Assets/Enemies/Goomba/goomba_32x32_idle.png')
         self.generic_sprite_1.create_sprite_sheet('./GameData/Assets/Enemies/Goomba/sprite_sheet/goomba_32x32_walk.png',
                                                   2, Vector(32, 32))
@@ -22,11 +35,15 @@ class goomba(enemy_object.EnemyObject):
         self.save_state.object_json_file = './GameData/jsons/goomba.json'
         self.animator.frame_count = 2
         self.animator.frame_duration = 200
-        self.death_animation_triggered = False
+        
         self.goomba_state = 0
+
+        # Audio FX
         self.audio_dir = "./GameData/Assets/Audio/EnemyFX"
         self.audio.load_audio('stomp', self.audio_dir + "/smb_stomp.wav")
 
+        # Enemy Variables
+        self.walking_velocity = 100
     def update(self, **kwargs):
 
         if not self.is_hit:
@@ -43,10 +60,10 @@ class goomba(enemy_object.EnemyObject):
         match self.goomba_state:
             case 0: # walk animation
                 if abs(self.physics.initial_velocity.x) > 0:
-                    self.animator.trigger_generic_animation(1)
+                    self.animator.trigger_generic_animation(WALK)
 
             case 1:  # squashed
-                self.animator.trigger_generic_animation(2)
+                self.animator.trigger_generic_animation(SQUASHED)
                 self.goomba_state = 2
 
             case 2:  # wait before destroying
@@ -54,13 +71,12 @@ class goomba(enemy_object.EnemyObject):
                     self.destroy = True     
 
             case 3:   # trigger death animation
-                self.animator.trigger_generic_animation(3)
+                self.animator.trigger_generic_animation(UPSIDE_DOWN)
                 self.goomba_state = 4
 
             case 4:  # wait before destorying
                 if self.animator.determine_time_elapsed() > 2000:
-                    #self.destroy = True
-                    None
+                    self.destroy = True
                 
  
     def audio_handler(self):
