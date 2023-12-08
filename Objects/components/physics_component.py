@@ -22,3 +22,22 @@ class PhysicsComponent:
     self.gravity = 0
     self.gravity_force = 0
     self.pause_x_position = False
+
+
+  def zero_speed(self,zero_x_components=False,zero_y_components=False):
+    if zero_x_components:
+      self.initial_velocity.x =0
+      self.velocity.x = 0
+      self.acceleration.x = 0    
+      self.force.x = 0
+      self.net_force.x = 0 
+
+    if zero_y_components:
+      self.initial_velocity.y=0
+      self.velocity.y=0 
+      self.acceleration.y=0
+      self.force.y=0
+      self.net_force.y=0
+
+
+    
