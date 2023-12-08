@@ -28,6 +28,10 @@ file_template = {
     'generic_sprite_4_rect': 'self.generic_sprite_4.create_sprite_sheet_rect()',
     'physics_pause': "self.physics.pause = True",
     'object_json_file': "self.save_state.object_json_file='./GameData/jsons/template_object.json'" ,
+    'end_of_function': True,
+    'def_update': 'def update(self,**kwargs):',
+    'None': 'None',
+    'end_of_function': True,
     "end_of_class": True,
     'def_create_object': "def create_object():",
     'object_return': "return userClass()",
@@ -62,17 +66,20 @@ def create_object_file(object_file_path,file_name,template):
 
         if 'class' in key and not class_indented:
             indent ='\t'
-
+            class_indented = True
         if 'def' in key and class_indented:
             indent += '\t'
-
+            def_indented = True
         if 'def' in key and not def_indented:
             indent += '\t'
             
         if key == 'end_of_class' and value is True:
             indent = ''
+            class_indented = False
+            def_indented = False
         if key == 'end_of_function' and value is True:
-            indent = ''
+            indent = indent[:len(indent)-1]
+            def_indented = False
 
     object_file.close()
         
