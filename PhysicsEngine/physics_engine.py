@@ -3,7 +3,7 @@ class PhysicsEngine:
 
 
     def __init__(self):
-        self.gravity = -9.8*50
+        self.gravity = -9.8*150
 
     def update(self,**kwargs):
         game_object = kwargs['GameObject']
