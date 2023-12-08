@@ -14,6 +14,9 @@ sys.path.append("./AnimationEngine")
 sys.path.append("./ScrollEngine")
 sys.path.append("./AudioEngine")
 sys.path.append("./EnemyEngine")
+sys.path.append("./EnvironmentEngine")
+sys.path.append("./ItemEngine")
+
 import input_engine
 import graphics_engine
 import player_object
@@ -26,6 +29,8 @@ import animation_engine
 import scroll_engine
 import audio_engine
 import enemy_engine
+import environment_engine
+import item_engine
 
 '''Hungarian Notation
 e = engine
@@ -44,6 +49,8 @@ e_animation = animation_engine.AnimationEngine()
 e_scroll = scroll_engine.ScrollEngine()
 e_audio = audio_engine.AudioEngine()
 e_enemy = enemy_engine.EnemyEngine()
+e_environment = environment_engine.EnvironmentEngine()
+e_item = item_engine.ItemEngine()
 
 l_game_objects = list()
 
@@ -81,6 +88,8 @@ while running:
             e_player.update(InputDict=input_dict, PlayerObject=objects, DeltaT=delta_t)
             e_enemy.update(GameObject=objects, ScrollEngine=e_scroll)
             e_animation.update(GameObject=objects)
+            e_environment.update(GameObject=objects)
+            e_item.update(GameObject=objects)
             e_audio.update(GameObject=objects)
             e_scroll.update(GameObject=objects)
 
