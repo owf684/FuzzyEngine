@@ -1,17 +1,10 @@
 import pygame
 
-
-
-#
-
 class AnimationEngine:
 
     def __init__(self):
 
         None
-
-
-
 
     def update(self,**kwargs):
 
