@@ -54,7 +54,7 @@ class CollisionEngine:
                 or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom - 10 < other.current_sprite.rect.bottom):
             current_object.collider.right = True
             current_object.collider.right_collision_object = other
-            if current_object.physics.direction.x <= 0:
+            if current_object.physics.direction.x >= 0:
                 current_object.physics.initial_position.x = other.current_sprite.rect.left - current_object.current_sprite.image.get_width() + 1
 
     def detect_down_collisions(self, current_object, other):
@@ -78,5 +78,5 @@ class CollisionEngine:
                 or other.current_sprite.rect.top < current_object.current_sprite.rect.bottom - 10 < other.current_sprite.rect.bottom):
             current_object.collider.left = True
             current_object.collider.left_collision_object = other
-            if current_object.physics.direction.x >= 0:
+            if current_object.physics.direction.x <= 0:
                 current_object.physics.initial_position.x = other.current_sprite.rect.right
