@@ -38,9 +38,9 @@ class PlayerObject(game_object.GameObject):
 
         self.initial_jump_velocity = -200
 
-        self.jump_velocity_increment = 1000
+        self.jump_velocity_increment = 2000
 
-        self.max_jump_velocity = -300
+        self.max_jump_velocity = -375
 
         self.hit_handled = False
 
@@ -159,12 +159,8 @@ class PlayerObject(game_object.GameObject):
         if self.is_hit and not self.hit_handled:
             self.collider.all_off = True
             self.hit_handled = True
-            self.physics.initial_velocity.x = 0
-            self.physics.velocity.x = 0
-            self.physics.acceleration.x = 0
-            self.physics.force.x = 0
-            self.physics.net_force.x = 0
-            self.physics.initial_velocity.y = -300
+            self.physics.zero_speed(True,False)
+            self.physics.initial_velocity.y = -500
 
 def create_object():
     return PlayerObject()
