@@ -8,5 +8,10 @@ class WarpPipe(environment_object.EnvironmentObject):
 			self.current_sprite.create_sprite('./GameData/Assets/Environment/warp_pipe.png')
 			self.physics.pause = True
 			self.save_state.object_json_file='./GameData/jsons/warp_pipe.json'
+
+
+		def update(self):
+			None
+
 def create_object():
 	return WarpPipe()
