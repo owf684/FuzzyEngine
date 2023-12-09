@@ -30,7 +30,8 @@ class ComboBoxUIComponent:
         self.width=width
         self.height=height
         self.sensing_rect = None
-        
+        self.render = False
+
     def reset(self):
         self.entries.clear()
         self.y_gap = 0
@@ -52,7 +53,6 @@ class ComboBoxUIComponent:
                     screen.blit( entry[ENTRY_IMAGE],(self.position.x+5,y_position+self.entries[self.selected_index][RECT].height/4) )
                     y_position += self.height
 
-    
     def set_position(self,position_vector):
         self.position = position_vector
         self.sensing_rect = pygame.Rect(position_vector.x,position_vector.y,self.width,self.height)
@@ -70,7 +70,7 @@ class ComboBoxUIComponent:
         self.y_gap += self.height
         self.entries.append([entry_image,rect,input,self.entry_unselected_color,directory])
 
-    def update(self,**kwargs):
+    def update(self, **kwargs):
         d_inputs = kwargs['InputDict']
         mouse_position = pygame.mouse.get_pos()
 
