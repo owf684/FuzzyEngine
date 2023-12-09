@@ -304,7 +304,6 @@ class LevelEditor:
         y_pos += 64
 
         self.l_object_component_cb_elements = {
-            'category_combo_box_ocf': self.category_combo_box,
             'current_sprite_dir_cb_ocf': self.current_sprite_dir_cb,
             'generic_sprite_1_dir_cb_ocf': self.generic_sprite_1_dir_cb,
             'generic_sprite_2_dir_cb_ocf': self.generic_sprite_2_dir_cb,
@@ -314,6 +313,7 @@ class LevelEditor:
             'generic_sprite_1_file_cb_ocf': self.generic_sprite_1_file_cb,
             'generic_sprite_2_file_cb_ocf': self.generic_sprite_2_file_cb,
             'generic_sprite_3_file_cb_ocf': self.generic_sprite_3_file_cb,
-            'generic_sprite_4_file_cb_ocf': self.generic_sprite_4_file_cb
+            'generic_sprite_4_file_cb_ocf': self.generic_sprite_4_file_cb,
+            'category_combo_box_ocf': self.category_combo_box
         }
 
