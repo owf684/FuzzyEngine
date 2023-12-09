@@ -1,3 +1,5 @@
+import copy
+
 import pygame
 import sys
 sys.path.append("./Objects/components")
@@ -65,7 +67,13 @@ class ComboBoxUIComponent:
     
     def add_entry(self,input,directory=''):
 
-        entry_image = self.font.render(input, 1, self.font_color)
+        view_input = copy.deepcopy(input)
+        entry_image = self.font.render(view_input, 1, self.font_color)
+
+        while entry_image.get_width() > self.width-5:
+            view_input = view_input[:len(view_input)-1]
+            entry_image = self.font.render(view_input, 1 , self.font_color)
+
         rect = pygame.Rect(self.position.x,self.position.y+self.y_gap,self.width,self.height)
         self.y_gap += self.height
         self.entries.append([entry_image,rect,input,self.entry_unselected_color,directory])
