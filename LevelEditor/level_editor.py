@@ -88,7 +88,7 @@ class LevelEditor:
         self.generic_sprite_4_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
 
         self.l_button_ui_elements = {}
-        self.l_combo_box_ui_elements = {}
+        self.l_object_component_cb_elements = {}
 
         self.setup_button_ui()
         self.setup_combo_box_ui()
@@ -134,7 +134,7 @@ class LevelEditor:
 
         self.c_object.update(TextBoxes=self.text_box_ui.l_text_boxes, Buttons=self.l_button_ui_elements,
                              InputDict=d_inputs,
-                             ComboBoxes=self.l_combo_box_ui_elements)
+                             ComboBoxes=self.l_object_component_cb_elements)
         self.text_box_ui.get_input(InputDict=d_inputs)
 
     def setup_button_ui(self):
@@ -303,7 +303,7 @@ class LevelEditor:
         )
         y_pos += 64
 
-        self.l_combo_box_ui_elements = {
+        self.l_object_component_cb_elements = {
             'category_combo_box_ocf': self.category_combo_box,
             'current_sprite_dir_cb_ocf': self.current_sprite_dir_cb,
             'generic_sprite_1_dir_cb_ocf': self.generic_sprite_1_dir_cb,
