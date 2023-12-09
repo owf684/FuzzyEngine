@@ -84,6 +84,9 @@ class GraphicsEngine:
         for text_box in e_level_editor.text_box_ui.l_text_boxes:
             text_box.draw_text_box(self.screen)
 
+        for key, cb in reversed(e_level_editor.l_object_component_cb_elements.items()):
+            if cb.render:
+                cb.draw_combo_box(self.screen)
         pygame.display.flip()
 
     def load_render_buffer(self, l_objects):

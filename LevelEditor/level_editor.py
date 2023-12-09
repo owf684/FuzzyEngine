@@ -13,6 +13,7 @@ import object_placer_component
 import text_box_ui_component
 import scene_component
 import object_component
+import combo_box_ui_component
 from vector import Vector
 
 
@@ -72,8 +73,25 @@ class LevelEditor:
         self.generic_3_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
         self.generic_4_sprite_sheet_switch = button_ui_component.ButtonUIComponent(switch=True)
 
+        # setup object form combo boxes
+        self.category_combo_box = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        # self.sprite_combo_box = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.current_sprite_dir_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_1_dir_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_2_dir_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_3_dir_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_4_dir_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.current_sprite_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_1_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_2_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_3_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+        self.generic_sprite_4_file_cb = combo_box_ui_component.ComboBoxUIComponent(200, 25)
+
         self.l_button_ui_elements = {}
+        self.l_object_component_cb_elements = {}
+
         self.setup_button_ui()
+        self.setup_combo_box_ui()
 
         # setup attributes ui
         self.attribute_ui = attribute_ui_component.AttributeUIComponent()
@@ -81,7 +99,7 @@ class LevelEditor:
         # setup object place
         self.object_placer = object_placer_component.ObjectPlacerComponent()
 
-        # setup a text boxt
+        # setup a text box
         self.text_box_ui = text_box_ui_component.TextBoxUIComponent()
 
         self.attribute_ui.l_text_boxes = self.text_box_ui.l_text_boxes
@@ -115,7 +133,8 @@ class LevelEditor:
                                   GraphicsEngine=e_graphics)
 
         self.c_object.update(TextBoxes=self.text_box_ui.l_text_boxes, Buttons=self.l_button_ui_elements,
-                             InputDict=d_inputs)
+                             InputDict=d_inputs,
+                             ComboBoxes=self.l_object_component_cb_elements)
         self.text_box_ui.get_input(InputDict=d_inputs)
 
     def setup_button_ui(self):
@@ -224,3 +243,77 @@ class LevelEditor:
                                      "grid_move_switch": self.grid_move_switch
 
                                      }
+
+    def setup_combo_box_ui(self):
+        self.category_combo_box.set_position(Vector(self.screen_width * .2 + 250, self.screen_height / 8 + 448))
+        self.category_combo_box.add_entry("environment_object")
+        self.category_combo_box.add_entry("game_object")
+        self.category_combo_box.add_entry("item_object")
+        self.category_combo_box.add_entry("scene_object")
+        self.category_combo_box.add_entry("enemy_object")
+
+        # object creator form directory selection combo boxes
+        y_pos = 64
+        self.current_sprite_dir_cb.set_position(
+            Vector(self.screen_width * .2 + 250, self.screen_height / 8 + y_pos))
+        y_pos += 64
+
+        self.generic_sprite_1_dir_cb.set_position(
+            Vector(self.screen_width * .2 + 250, self.screen_height / 8 + y_pos))
+        y_pos += 64
+
+        self.generic_sprite_2_dir_cb.set_position(
+            Vector(self.screen_width * .2 + 250, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_3_dir_cb.set_position(
+            Vector(self.screen_width * .2 + 250, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_4_dir_cb.set_position(
+            Vector(self.screen_width * .2 + 250, self.screen_height / 8 + y_pos)
+        )
+
+        # object creator form file selection combo boxes
+        y_pos = 64
+        self.current_sprite_file_cb.set_position(
+            Vector(self.screen_width * .2 + 450, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_1_file_cb.set_position(
+            Vector(self.screen_width * .2 + 450, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_2_file_cb.set_position(
+            Vector(self.screen_width * .2 + 450, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_3_file_cb.set_position(
+            Vector(self.screen_width * .2 + 450, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.generic_sprite_4_file_cb.set_position(
+            Vector(self.screen_width * .2 + 450, self.screen_height / 8 + y_pos)
+        )
+        y_pos += 64
+
+        self.l_object_component_cb_elements = {
+            'category_combo_box_ocf': self.category_combo_box,
+            'current_sprite_dir_cb_ocf': self.current_sprite_dir_cb,
+            'generic_sprite_1_dir_cb_ocf': self.generic_sprite_1_dir_cb,
+            'generic_sprite_2_dir_cb_ocf': self.generic_sprite_2_dir_cb,
+            'generic_sprite_3_dir_cb_ocf': self.generic_sprite_3_dir_cb,
+            'generic_sprite_4_dir_cb_ocf': self.generic_sprite_4_dir_cb,
+            'current_sprite_file_cb_ocf': self.current_sprite_file_cb,
+            'generic_sprite_1_file_cb_ocf': self.generic_sprite_1_file_cb,
+            'generic_sprite_2_file_cb_ocf': self.generic_sprite_2_file_cb,
+            'generic_sprite_3_file_cb_ocf': self.generic_sprite_3_file_cb,
+            'generic_sprite_4_file_cb_ocf': self.generic_sprite_4_file_cb
+        }
+
