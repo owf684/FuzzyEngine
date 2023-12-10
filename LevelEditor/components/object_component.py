@@ -158,19 +158,20 @@ class ObjectComponent:
         self.l_text_boxes.clear()
 
     def save_object(self):
-        current_sprite = self.sprite_cb[0][self.sprite_dir_cb_index[0]].get_directory() + "/" + self.sprite_cb[0][
-            self.sprite_dir_cb_index[0]].get_value()
-        generic_sprite_1 = self.sprite_cb[1][self.sprite_dir_cb_index[1]].get_directory() + "/" + self.sprite_cb[1][
-            self.sprite_dir_cb_index[1]].get_value()
-        generic_sprite_2 = self.sprite_cb[2][self.sprite_dir_cb_index[2]].get_directory() + "/" + self.sprite_cb[2][
-            self.sprite_dir_cb_index[2]].get_value()
-        generic_sprite_3 = self.sprite_cb[3][self.sprite_dir_cb_index[3]].get_directory() + "/" + self.sprite_cb[3][
-            self.sprite_dir_cb_index[3]].get_value()
-        generic_sprite_4 = self.sprite_cb[4][self.sprite_dir_cb_index[4]].get_directory() + "/" + self.sprite_cb[4][
-            self.sprite_dir_cb_index[4]].get_value()
+
+        current_sprite = self.l_combo_box_ui_elements['current_sprite_dir_cb_ocf'].get_value() + "/" + \
+            self.l_combo_box_ui_elements['current_sprite_file_cb_ocf'].get_value()
+        generic_sprite_1 = self.l_combo_box_ui_elements['generic_sprite_1_dir_cb_ocf'].get_value() + "/" + \
+            self.l_combo_box_ui_elements['generic_sprite_1_file_cb_ocf'].get_value()
+        generic_sprite_2 = self.l_combo_box_ui_elements['generic_sprite_2_dir_cb_ocf'].get_value() + "/" + \
+            self.l_combo_box_ui_elements['generic_sprite_2_file_cb_ocf'].get_value()
+        generic_sprite_3 = self.l_combo_box_ui_elements['generic_sprite_3_dir_cb_ocf'].get_value() + "/" + \
+            self.l_combo_box_ui_elements['generic_sprite_3_file_cb_ocf'].get_value()
+        generic_sprite_4 = self.l_combo_box_ui_elements['generic_sprite_4_dir_cb_ocf'].get_value() + "/" + \
+            self.l_combo_box_ui_elements['generic_sprite_4_file_cb_ocf'].get_value()
 
         object_class = self.l_text_boxes[0].userInput
-        object_category = self.category_combo_box.get_value()
+        object_category = self.l_combo_box_ui_elements['category_combo_box_ocf'].get_value()
 
         file_directory = './GameData/' + object_template.object_categories[object_category] + 's'
         class_name = ''
@@ -178,7 +179,7 @@ class ObjectComponent:
         makeUpper = True
         uppersFound = 0
 
-        '''Convert class_name => ClassName'''
+        # Convert class_name => ClassName
         if '_' in object_class:
             file_name = object_class.lower()
             for characters in object_class:
@@ -193,7 +194,7 @@ class ObjectComponent:
             object_class = class_name
 
         else:
-            '''convert ClassName => class_name'''
+            # convert ClassName => class_name 
             for characters in object_class:
 
                 if characters == characters.upper():
