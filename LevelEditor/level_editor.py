@@ -128,7 +128,7 @@ class LevelEditor:
         e_graphics.draw_colliders = self.draw_colliders
         self.attribute_ui.update_selected_object(d_inputs, game_objects)
         self.attribute_ui.update_object_attributes(d_inputs)
-
+        self.attribute_ui.update()
         self.object_container_ui.update_object_container_ui(self.c_object_creator)
 
         self.object_placer.update(InputDict=d_inputs, GameObjects=game_objects, ALevelEditor=self,

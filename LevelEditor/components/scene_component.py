@@ -187,7 +187,7 @@ class SceneComponent:
                 if mouse_position[0] < self.display_info.current_w*.8 and mouse_position[1] > self.display_info.current_h*.8-15:
 
                     if self.event is not None:
-                        self.scroll_delta += self.event.y*10
+                        self.scroll_delta += -1*self.event.x*10
                         self.event = None
 
 
