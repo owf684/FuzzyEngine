@@ -56,6 +56,8 @@ class LevelEditor:
         self.remove_object_button = button_ui_component.ButtonUIComponent()
         self.collision_button = button_ui_component.ButtonUIComponent()
         self.grid_move_switch = button_ui_component.ButtonUIComponent(switch=True)
+        self.reload_objects_button = button_ui_component.ButtonUIComponent()
+
         self.scroll_in_edit = False
 
         # setup scene buttons
@@ -147,6 +149,7 @@ class LevelEditor:
         self.save_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_button.png", 2, Vector(32, 32))
         self.delete_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/delete_button.png", 2, Vector(32, 32))
         self.reload_scene_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/reload_button.png", 2, Vector(32, 32))
+        self.reload_objects_button.sprite.create_sprite_sheet('./Assets/UI/Buttons/reload_button.png',2 , Vector(32,32))
         self.save_object_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/save_object_button.png", 2,
                                                            Vector(128, 64))
         self.cancel_save_button.sprite.create_sprite_sheet("./Assets/UI/Buttons/cancel_object_button.png", 2,
@@ -184,6 +187,8 @@ class LevelEditor:
                 -1].get_width(), 25)
         self.grid_move_switch.sprite.position = Vector(
             self.collision_button.sprite.position.x+5+self.collision_button.sprite.sprite_sheet[-1].get_width(), 25)
+        self.reload_objects_button.sprite.position = Vector(
+            self.grid_move_switch.sprite.position.x+5+self.grid_move_switch.sprite.sprite_sheet[-1].get_width(), 25)
 
         self.back_button.sprite.position = Vector(self.screen_width + 10, 170)
 
@@ -222,7 +227,7 @@ class LevelEditor:
         self.generic_3_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
         self.generic_4_sprite_sheet_switch.sprite.create_sprite_sheet_rect()
         self.grid_move_switch.sprite.create_sprite_sheet_rect()
-
+        self.reload_objects_button.sprite.create_sprite_sheet_rect()
         # add to ui element
         self.l_button_ui_elements = {'play': self.play_pause_button,
                                      'add': self.add_object_button,
@@ -240,7 +245,8 @@ class LevelEditor:
                                      'generic_2_sprite_switch': self.generic_2_sprite_sheet_switch,
                                      'generic_3_sprite_switch': self.generic_3_sprite_sheet_switch,
                                      'generic_4_sprite_switch': self.generic_4_sprite_sheet_switch,
-                                     "grid_move_switch": self.grid_move_switch
+                                     "grid_move_switch": self.grid_move_switch,
+                                     'reload_objects_button': self.reload_objects_button
 
                                      }
 
