@@ -29,21 +29,43 @@ class AttributeUIComponent:
         self.selected_object = None
         self.previous_object = list()
         self.attributes_created = False
+        self.event = None
+        self.scroll_delta = 0
 
     def draw_attributes(self, screen):
 
         pygame.draw.rect(screen, self.attr_window_color, (
-        self.attr_window_position.x, self.attr_window_position.y, self.attr_window_size.x, self.attr_window_size.y))
-        pygame.draw.rect(screen, self.attr_window_color, (
-        self.attr_window_position.x + 130, self.attr_window_position.y, self.display_width / 6.25,
-        self.attr_window_size.y))
-        self.update_attributes(screen)
+            self.attr_window_position.x + 130, self.attr_window_position.y, self.display_width / 6.25,
+            self.attr_window_size.y))
 
-    def update_attributes(self, screen):
+        self.update_attribute_values(screen)
+
+        pygame.draw.rect(screen, self.attr_window_color, (
+            self.attr_window_position.x, self.attr_window_position.y, self.attr_window_size.x, self.attr_window_size.y))
+
+        self.update_attribute_names(screen)
+
+    def update_attribute_names(self, screen):
         x_position = self.display_width + 10
         y_position = self.attr_window_position.y + 10
         y_increment = 25
-        x_spacing = 150
+        x_spacing = 200
+        i = 0
+        if self.selected_object is not None:
+
+            if hasattr(self.selected_object, "__dict__"):
+
+                for key, value in vars(self.selected_object).items():
+
+                    screen.blit(self.l_attribute_components[i].attribute_image, (x_position, y_position))
+                    y_position += y_increment
+                    i += 1
+
+    def update_attribute_values(self, screen):
+        x_position = self.display_width + 10
+        y_position = self.attr_window_position.y + 10
+        y_increment = 25
+        x_spacing = 200
         i = 0
         if self.selected_object is not None:
 
@@ -53,12 +75,18 @@ class AttributeUIComponent:
                     if not self.attributes_created:
                         self.add_attribute_component([key, value], x_position, y_position)
 
-                    self.l_attribute_components[i].update_value(value)
+                    x = x_position + x_spacing + self.scroll_delta
+                    self.l_attribute_components[i].update_value(value, x)
 
-                    screen.blit(self.l_attribute_components[i].attribute_image, (x_position, y_position))
-                    screen.blit(self.l_attribute_components[i].value_image, ((x_position + x_spacing), y_position))
+                    while x < self.attr_window_position.x:
+                        value = str(value)[1:]
+                        self.l_attribute_components[i].update_value(value,x)
+                        x += 2
+
+                    screen.blit(self.l_attribute_components[i].value_image, (x, y_position))
                     y_position += y_increment
                     i += 1
+
                 if not self.attributes_created and len(self.l_attribute_components) > 0:
                     self.attributes_created = True
 
@@ -73,8 +101,21 @@ class AttributeUIComponent:
                     self.selected_object = objects
                     self.attributes_created = False
                     self.l_attribute_components.clear()
+                    self.scroll_delta = d_inputs['scroll_delta'] = 0
                 elif not d_inputs['left-click'] and d_inputs['left_click_latch']:
                     d_inputs["left_click_latch"] = False
+
+    def update(self, **kwargs):
+
+        self.scroll_attributes()
+
+    def scroll_attributes(self):
+        if self.event is not None:
+            mouse_position = pygame.mouse.get_pos()
+            # update scroll delta
+            if mouse_position[0] >= self.attr_window_position.x:
+                self.scroll_delta += -1 * self.event.x * 10
+                self.event = None
 
     def update_object_attributes(self, d_input):
         mouse_position = pygame.mouse.get_pos()
@@ -90,7 +131,7 @@ class AttributeUIComponent:
                         self.attributes_created = False
                         self.previous_object.append(self.selected_object)
                         self.selected_object = attr.attr_data[1]
-
+                        self.scroll_delta= 0
                     d_input['left_click_latch'] = True
 
                 elif not d_input['left-click'] and d_input['left_click_latch']:
@@ -106,6 +147,7 @@ class AttributeUIComponent:
             self.selected_object = self.previous_object.pop()
             self.l_attribute_components.clear()
             self.attributes_created = False
+            self.scroll_delta = 0
             self.l_text_boxes.clear()
 
 
@@ -126,11 +168,11 @@ class AttributeComponent:
         self.select_color = (0, 50, 225)
         self.x_spacing = 150
         self.y_increment = 25
-
+        self.offscreen_value = ''
     def create_attribute(self, attr, position):
+
         self.attr_data = attr
         self.position = position
-
         self.attribute_image = self.font.render(str(attr[0]), 1, self.font_color)
 
         self.value_image = self.font.render(str(attr[1])[:34], 1, self.font_color)
@@ -145,12 +187,13 @@ class AttributeComponent:
 
         self.value_unselected_image = self.value_image
 
-    def update_value(self, value):
+    def update_value(self, value, x):
+
 
         mouse_position = pygame.mouse.get_pos()
 
         self.attr_data[1] = value
-
+        self.value_rect.x = x
         self.value_image = self.font.render(str(self.attr_data[1]), 1, self.font_color)
 
         self.value_selected_image = self.font.render(str(self.attr_data[1]), 1, self.select_color)

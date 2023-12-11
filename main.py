@@ -75,6 +75,7 @@ while running:
             e_level_editor.text_box_ui.event = event
         if event.type == pygame.MOUSEWHEEL:
             e_level_editor.c_scene.event = event
+            e_level_editor.attribute_ui.event = event
     input_dict = e_inputs.update()
 
     e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
