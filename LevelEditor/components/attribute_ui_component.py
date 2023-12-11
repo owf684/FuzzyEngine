@@ -71,7 +71,8 @@ class AttributeUIComponent:
                     d_inputs['left_click_latch'] = True
 
                     self.selected_object = objects
-
+                    self.attributes_created = False
+                    self.l_attribute_components.clear()
                 elif not d_inputs['left-click'] and d_inputs['left_click_latch']:
                     d_inputs["left_click_latch"] = False
 

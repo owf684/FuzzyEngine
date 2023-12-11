@@ -124,6 +124,11 @@ class ButtonUIComponent:
                 self.button_signal.send(**kwargs)
             case 'grid_move_switch':
                 self.button_signal.send(**kwargs)
+            case 'reload_objects_button':
+                if self.toggled:
+                    self.toggled = False
+                    self.button_signal.send(**kwargs)
+
             case _:
                 None
             
@@ -201,6 +206,9 @@ class ButtonSignal:
 
             case 'grid_move_switch':
                 level_editor.scroll_in_edit = level_editor.grid_move_switch.toggled
+
+            case 'reload_objects_button':
+                level_editor.c_object_creator.reload_objects()
 
             case _:
                 None

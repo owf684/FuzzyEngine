@@ -2,7 +2,7 @@ import json
 import sys
 import os
 import failed_module_load
-
+import importlib
 ''' Hungarian notation
 l = list()
 d = dict()
@@ -43,6 +43,10 @@ class ObjectCreatorComponent:
 		self.i_object = 0
 		self.update_editor_ui = False
 
+	def reload_objects(self):
+		for key, value in self.d_modules.items():
+			importlib.reload(value)
+
 	def reset(self):
 		self.l_json_modules.clear()
 		self.l_objects.clear()
@@ -50,7 +54,9 @@ class ObjectCreatorComponent:
 		self.l_categories.clear()
 		self.i_category = 0
 		self.i_object = 0
-		self.update_editor_ui = False		
+		self.d_modules = {}
+		self.s_directory_path = './'
+		self.update_editor_ui = False
 		
 	def create_json_list(self,directory_path='./GameData/jsons/'):
 		for root, dirs, files in os.walk(directory_path):
@@ -121,12 +127,6 @@ class ObjectCreatorComponent:
 		elif self.i_object < 0:
 			self.i_object = 0
 
-	def reset(self):
-		self.l_json_modules = list()
-		self.l_objects = list()
-		self.d_modules = {}
-		self.s_directory_path = './'
-		self.l_categories = list()
 
 	def get_selected_category(self):
 		return self.l_categories[self.i_category]
