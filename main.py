@@ -6,7 +6,6 @@ sys.path.append("./GraphicsEngine")
 sys.path.append('./Objects')
 sys.path.append("./PhysicsEngine")
 sys.path.append("./PlayerEngine")
-sys.path.append('./GameData/GameObjects')
 sys.path.append("./LevelEditor")
 sys.path.append("./SpriteEngine")
 sys.path.append("./CollisionEngine")
@@ -19,7 +18,6 @@ sys.path.append("./ItemEngine")
 
 import input_engine
 import graphics_engine
-import player_object
 import physics_engine
 import player_engine
 import level_editor

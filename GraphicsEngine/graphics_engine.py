@@ -1,11 +1,9 @@
 import pygame
 import sys
-
 sys.path.append("./Objects")
-sys.path.append("./GameData/GameObjects")
 import enemy_object
 import environment_object
-import game_object
+import player_object
 import item_object
 import scene_object
 
@@ -36,7 +34,7 @@ class GraphicsEngine:
 
         self.scene_objects = list()
         self.enemy_objects = list()
-        self.game_objects = list()
+        self.player_objects = list()
         self.environment_objects = list()
         self.item_objects = list()
 
@@ -53,7 +51,7 @@ class GraphicsEngine:
             self.item_objects.clear()
             self.enemy_objects.clear()
             self.environment_objects.clear()
-            self.game_objects.clear()
+            self.player_objects.clear()
             self.scene_objects.clear()
             self.clear_render_buffer = False
 
@@ -106,8 +104,8 @@ class GraphicsEngine:
                             self.enemy_objects.append(objects)
                         elif isinstance(objects, environment_object.EnvironmentObject):
                             self.environment_objects.append(objects)
-                        elif isinstance(objects, game_object.GameObject):
-                            self.game_objects.append(objects)
+                        elif isinstance(objects, player_object.PlayerObject):
+                            self.player_objects.append(objects)
                         elif isinstance(objects, item_object.ItemObject):
                             self.item_objects.append(objects)
                         elif isinstance(objects, scene_object.SceneObject):
@@ -120,8 +118,8 @@ class GraphicsEngine:
                             self.enemy_objects.remove(objects)
                         elif isinstance(objects, environment_object.EnvironmentObject):
                             self.environment_objects.remove(objects)
-                        elif isinstance(objects, game_object.GameObject):
-                            self.game_objects.remove(objects)
+                        elif isinstance(objects, player_object.PlayerObject):
+                            self.player_objects.remove(objects)
                         elif isinstance(objects, item_object.ItemObject):
                             self.item_objects.remove(objects)
                         elif isinstance(objects, scene_object.SceneObject):
@@ -139,8 +137,8 @@ class GraphicsEngine:
                             self.enemy_objects.remove(objects)
                         elif isinstance(objects, environment_object.EnvironmentObject):
                             self.environment_objects.remove(objects)
-                        elif isinstance(objects, game_object.GameObject):
-                            self.game_objects.remove(objects)
+                        elif isinstance(objects, player_object.PlayerObject):
+                            self.player_objects.remove(objects)
                         elif isinstance(objects, item_object.ItemObject):
                             self.item_objects.remove(objects)
                         elif isinstance(objects, scene_object.SceneObject):
@@ -156,7 +154,7 @@ class GraphicsEngine:
             self.blit_object(objects)
         for objects in self.enemy_objects:
             self.blit_object(objects)
-        for objects in self.game_objects:
+        for objects in self.player_objects:
             self.blit_object(objects)
 
         '''for objects in self.render_buffer:

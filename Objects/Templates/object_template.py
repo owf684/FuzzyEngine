@@ -3,6 +3,9 @@ from copy import deepcopy
 
 sys.path.append("./Objects/components")
 from vector import Vector
+import project_interface
+global project_dir
+project_dir = project_interface.get_project_directory()
 
 file_template = {
     'sys_import': "import sys",
@@ -10,9 +13,13 @@ file_template = {
     'objects_components_path_append' : "sys.path.append('./Objects/components')",
     'parent_object': "import template_object",
     'vector_object': "from vector import Vector",
+    'project_interface': 'import project_interface',
+    'global_project_dir' : 'global project_dir',
+    'project_dir' : 'project_dir = project_interface.get_project_directory()',
     'class_define': "class userClass(template_object.TemplateObject):",
     'def_init' : "def __init__(self):",
     'super_init': "super().__init__()",
+    'global_project_dir_init' : 'global project_dir',
     'current_sprite': "self.current_sprite.create_sprite('./GameData/Assets/userDirectory')",
     'generic_sprite_1': "self.generic_sprite_1.create_sprite_sheet('None',2,Vector(32,32))",
     'generic_sprite_1_position': 'self.generic_sprite_1.position = Vector(0,0)',
@@ -51,7 +58,7 @@ def get_file_template():
 def create_object_file(object_file_path,file_name,template):
     if object_file_path[-1] != '/':
         object_file_path += '/'
-    object_file = open( object_file_path + file_name,"w")
+    object_file = open(project_dir + object_file_path + file_name, "w")
     indent = ''
     end_line = '\n'
     class_indented = False

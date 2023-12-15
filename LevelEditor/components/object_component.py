@@ -41,6 +41,10 @@ class ObjectComponent:
         self.d_inputs = None
         self.class_name_value = ''
 
+        # read in current project directory 
+        with open('./project_file.json', 'r') as file:
+            self.project_file = json.load(file)
+        print(self.project_file)
     def update(self, **kwargs):
         self.l_text_boxes = kwargs['TextBoxes']
         self.l_button_ui_elements = kwargs['Buttons']
@@ -82,7 +86,6 @@ class ObjectComponent:
             self.l_button_ui_elements['generic_3_sprite_switch'].render = True
             self.l_button_ui_elements['generic_4_sprite_switch'].render = True
 
-
             if not self.add_text_boxes:
                 textBox2 = text_box_ui_component.TextBox(200, 25, Vector(self.display_width * .2 + 250,
                                                                          self.display_height / 8 + 384))
@@ -97,8 +100,11 @@ class ObjectComponent:
                     if 'dir' in key:
                         selected_index = self.l_combo_box_ui_elements[key].selected_index
                         file_key = key.replace('dir', 'file')
-                        self.l_combo_box_ui_elements[file_key] = self.file_cb_collection[key][selected_index]
+                        try:
 
+                            self.l_combo_box_ui_elements[file_key] = self.file_cb_collection[key][selected_index]
+                        except:
+                            None
                     value.update(InputDict=self.d_inputs)
 
     def find_sprites(self):
@@ -117,9 +123,11 @@ class ObjectComponent:
 
             if 'ocf' in key and 'dir' in key:
 
-                for root, dirs, files in os.walk("./GameData/Assets/"):
-                    if len(root[18:]) > 0:
-                        cb.add_entry(root[18:])
+                for root, dirs, files in os.walk(self.project_file['current_project']+"/GameData/Assets/"):
+                    if len(root) > 0:
+                        game_data_index = root.index('/GameData')
+                        game_data_path = root[game_data_index:]
+                        cb.add_entry(game_data_path)
 
                         new_cb.append(combo_box_ui_component.ComboBoxUIComponent(200, 25))
                         new_cb[-1].set_position(Vector(self.display_width * .2 + 450, self.display_height / 8 + y_pos))
@@ -160,20 +168,20 @@ class ObjectComponent:
     def save_object(self):
 
         current_sprite = self.l_combo_box_ui_elements['current_sprite_dir_cb_ocf'].get_value() + "/" + \
-            self.l_combo_box_ui_elements['current_sprite_file_cb_ocf'].get_value()
+                         self.l_combo_box_ui_elements['current_sprite_file_cb_ocf'].get_value()
         generic_sprite_1 = self.l_combo_box_ui_elements['generic_sprite_1_dir_cb_ocf'].get_value() + "/" + \
-            self.l_combo_box_ui_elements['generic_sprite_1_file_cb_ocf'].get_value()
+                           self.l_combo_box_ui_elements['generic_sprite_1_file_cb_ocf'].get_value()
         generic_sprite_2 = self.l_combo_box_ui_elements['generic_sprite_2_dir_cb_ocf'].get_value() + "/" + \
-            self.l_combo_box_ui_elements['generic_sprite_2_file_cb_ocf'].get_value()
+                           self.l_combo_box_ui_elements['generic_sprite_2_file_cb_ocf'].get_value()
         generic_sprite_3 = self.l_combo_box_ui_elements['generic_sprite_3_dir_cb_ocf'].get_value() + "/" + \
-            self.l_combo_box_ui_elements['generic_sprite_3_file_cb_ocf'].get_value()
+                           self.l_combo_box_ui_elements['generic_sprite_3_file_cb_ocf'].get_value()
         generic_sprite_4 = self.l_combo_box_ui_elements['generic_sprite_4_dir_cb_ocf'].get_value() + "/" + \
-            self.l_combo_box_ui_elements['generic_sprite_4_file_cb_ocf'].get_value()
+                           self.l_combo_box_ui_elements['generic_sprite_4_file_cb_ocf'].get_value()
 
         object_class = self.l_text_boxes[0].userInput
         object_category = self.l_combo_box_ui_elements['category_combo_box_ocf'].get_value()
 
-        file_directory = './GameData/' + object_template.object_categories[object_category] + 's'
+        file_directory = "/GameData/" + object_template.object_categories[object_category] + 's'
         class_name = ''
         file_name = ''
         makeUpper = True
@@ -194,7 +202,7 @@ class ObjectComponent:
             object_class = class_name
 
         else:
-            # convert ClassName => class_name 
+            # convert ClassName => class_name
             for characters in object_class:
 
                 if characters == characters.upper():
@@ -213,19 +221,19 @@ class ObjectComponent:
                                         object_template.object_categories[object_category] + "):"
 
         if 'None' not in current_sprite:
-            file_template[
-                'current_sprite'] = "self.current_sprite.create_sprite('./GameData/Assets/" + current_sprite + "')"
+            file_template['current_sprite'] = "self.current_sprite.create_sprite(project_dir + '" + current_sprite + "')"
         else:
             file_template.pop('current_sprite')
 
         if 'None' not in generic_sprite_1:
             if self.generic_1_sprite_is_sheet:
                 file_template['generic_sprite_1'] = (
-                "self.generic_sprite_1.create_sprite_sheet('./GameData/Assets/" + generic_sprite_1, 1, Vector(32, 32))
+                    "self.generic_sprite_1.create_sprite_sheet(project_dir + " + generic_sprite_1 + '"', 1,
+                    Vector(32, 32))
 
             else:
                 file_template[
-                    'generic_sprite_1'] = "self.generic_sprite_1.create_sprite('./GameData/Assets/" + generic_sprite_1 + "')"
+                    'generic_sprite_1'] = "self.generic_sprite_1.create_sprite(project_dir + '" + generic_sprite_1
                 file_template.pop('generic_sprite_1_position')
                 file_template.pop("generic_sprite_1_rect")
         else:
@@ -235,11 +243,12 @@ class ObjectComponent:
         if 'None' not in generic_sprite_2:
             if self.generic_2_sprite_is_sheet:
                 file_template['generic_sprite_2'] = (
-                "self.generic_sprite_2.create_sprite_sheet('./GameData/Assets/" + generic_sprite_2, 1, Vector(32, 32))
+                    "self.generic_sprite_2.create_sprite_sheet(project_dir + '" + generic_sprite_2, 1,
+                    Vector(32, 32))
 
             else:
                 file_template[
-                    'generic_sprite_2'] = "self.generic_sprite_2.create_sprite('./GameData/Assets/" + generic_sprite_2 + "')"
+                    'generic_sprite_2'] = "self.generic_sprite_2.create_sprite(project_dir + '" + generic_sprite_2 + "')"
                 file_template.pop('generic_sprite_2_position')
                 file_template.pop("generic_sprite_2_rect")
         else:
@@ -249,11 +258,12 @@ class ObjectComponent:
         if 'None' not in generic_sprite_3:
             if self.generic_3_sprite_is_sheet:
                 file_template['generic_sprite_3'] = (
-                "self.generic_sprite_3.create_sprite_sheet('./GameData/Assets/" + generic_sprite_3, 1, Vector(32, 32))
+                    "self.generic_sprite_3.create_sprite_sheet(project_dir + '" + generic_sprite_3, 1,
+                    Vector(32, 32))
 
             else:
                 file_template[
-                    'generic_sprite_3'] = "self.generic_sprite_3.create_sprite('./GameData/Assets/" + generic_sprite_3 + "')"
+                    'generic_sprite_3'] = "self.generic_sprite_3.create_sprite(project_dir + '" + generic_sprite_3 + "')"
                 file_template.pop('generic_sprite_3_position')
                 file_template.pop("generic_sprite_3_rect")
         else:
@@ -264,11 +274,12 @@ class ObjectComponent:
         if 'None' not in generic_sprite_4:
             if self.generic_4_sprite_is_sheet:
                 file_template['generic_sprite_4'] = (
-                "self.generic_sprite_4.create_sprite_sheet('./GameData/Assets/" + generic_sprite_4, 1, Vector(32, 32))
+                    "self.generic_sprite_4.create_sprite_sheet(project_dir + ' " + generic_sprite_4, 1,
+                    Vector(32, 32))
 
             else:
                 file_template[
-                    'generic_sprite_4'] = "self.generic_sprite_4.create_sprite('./GameData/Assets/" + generic_sprite_4 + "')"
+                    'generic_sprite_4'] = "self.generic_sprite_4.create_sprite(project_dir + '" + generic_sprite_4 + "')"
                 file_template.pop('generic_sprite_4_position')
                 file_template.pop("generic_sprite_4_rect")
 
@@ -277,7 +288,7 @@ class ObjectComponent:
             file_template.pop('generic_sprite_4_position')
             file_template.pop("generic_sprite_4_rect")
 
-        file_template['object_json_file'] = "self.save_state.object_json_file='./GameData/jsons/" + file_name.rstrip(
+        file_template['object_json_file'] = "self.save_state.object_json_file='" + "/GameData/jsons/" + file_name.rstrip(
             '.py') + ".json'"
 
         file_template['object_return'] = "return " + object_class + "()"
@@ -291,7 +302,7 @@ class ObjectComponent:
             "object_class": object_class,
             "object_category": object_category
         }
-        with open("./GameData/jsons/" + file_name.rstrip('.py') + ".json", 'w') as json_file:
+        with open(self.project_file['current_project']+"/GameData/jsons/" + file_name.rstrip('.py') + ".json", 'w') as json_file:
             json.dump(object_json, json_file)
 
         self.cancel_prompt()

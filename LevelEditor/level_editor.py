@@ -1,3 +1,4 @@
+import json
 import sys
 import pygame
 
@@ -27,7 +28,10 @@ class LevelEditor:
 
         # setup object creator
         self.c_object_creator = object_creator_component.ObjectCreatorComponent()
-        self.c_object_creator.s_directory_path = './GameData/jsons'
+        with open('project_file.json','r') as file:
+            self.project_file = json.load(file)
+
+        self.c_object_creator.s_directory_path = self.project_file['current_project']
         self.c_object_creator.create_json_list()
         self.c_object_creator.create_objects_dict()
         self.c_object_creator.organize_objects()

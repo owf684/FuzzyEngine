@@ -63,21 +63,23 @@ class ObjectPlacerComponent:
         return False
     
     def add_game_object(self,mouse_position,obj,game_objects,level_editor):
-        snap_position = [0,0]
+
+        if obj is not None:
+
+            snap_position = [0,0]
        
-        if mouse_position[0] < level_editor.grid.grid_size:
-            snap_position[0] = 0
-        else:
-            snap_position[0] = int((mouse_position[0] - abs(level_editor.grid.scroll_delta))/level_editor.grid.grid_size)*level_editor.grid.grid_size + abs(level_editor.grid.scroll_delta)                
+            if mouse_position[0] < level_editor.grid.grid_size:
+                snap_position[0] = 0
+            else:
+                snap_position[0] = int((mouse_position[0] - abs(level_editor.grid.scroll_delta))/level_editor.grid.grid_size)*level_editor.grid.grid_size + abs(level_editor.grid.scroll_delta)
         
-        snap_position[1] = int(mouse_position[1]/level_editor.grid.grid_size)*level_editor.grid.grid_size
-        game_objects.append(obj)
-        game_objects[-1].physics.initial_position.x = snap_position[0]
-        game_objects[-1].physics.initial_position.y = snap_position[1]
-        game_objects[-1].physics.position = game_objects[-1].physics.initial_position()
-        game_objects[-1].current_sprite.update(game_objects[-1].physics.initial_position())
-        #game_objects[-1].physics.initial_position.x += level_editor.grid.scroll_offset
-        game_objects[-1].save_state.initial_position = game_objects[-1].physics.initial_position()
-        game_objects[-1].save_state.initial_position.x += level_editor.grid.scroll_offset
+            snap_position[1] = int(mouse_position[1]/level_editor.grid.grid_size)*level_editor.grid.grid_size
+            game_objects.append(obj)
+            game_objects[-1].physics.initial_position.x = snap_position[0]
+            game_objects[-1].physics.initial_position.y = snap_position[1]
+            game_objects[-1].physics.position = game_objects[-1].physics.initial_position()
+            game_objects[-1].current_sprite.update(game_objects[-1].physics.initial_position())
+            game_objects[-1].save_state.initial_position = game_objects[-1].physics.initial_position()
+            game_objects[-1].save_state.initial_position.x += level_editor.grid.scroll_offset
 
         
