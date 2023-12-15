@@ -1,7 +1,5 @@
 import sys
 import pygame
-
-sys.path.append('./GameData/GameObjects')
 sys.path.append("./objects")
 import enemy_object
 import player_object

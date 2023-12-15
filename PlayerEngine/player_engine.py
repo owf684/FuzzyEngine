@@ -1,6 +1,6 @@
 import pygame
 import sys
-sys.path.append('./GameData/GameObjects')
+sys.path.append('./Objects')
 import player_object
 
 class PlayerEngine:
