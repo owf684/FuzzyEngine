@@ -257,7 +257,7 @@ class LevelEditor:
     def setup_combo_box_ui(self):
         self.category_combo_box.set_position(Vector(self.screen_width * .2 + 250, self.screen_height / 8 + 448))
         self.category_combo_box.add_entry("environment_object")
-        self.category_combo_box.add_entry("game_object")
+        self.category_combo_box.add_entry("player_object")
         self.category_combo_box.add_entry("item_object")
         self.category_combo_box.add_entry("scene_object")
         self.category_combo_box.add_entry("enemy_object")
