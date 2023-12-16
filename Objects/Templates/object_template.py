@@ -47,7 +47,7 @@ file_template = {
 
 object_categories ={
     'environment_object': 'EnvironmentObject',
-    'game_object': 'GameObject',
+    'player_object': 'PlayerObject',
     'item_object': 'ItemObject',
     'scene_object': 'SceneObject',
     'enemy_object': 'EnemyObject'

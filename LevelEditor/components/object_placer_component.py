@@ -51,8 +51,8 @@ class ObjectPlacerComponent:
                 if self.object_exists(mouse_position,e_graphics.environment_objects):
                     e_graphics.environment_objects.remove(self.selected_object)
 
-                if self.object_exists(mouse_position,e_graphics.game_objects):
-                    e_graphics.game_objects.remove(self.selected_object)
+                if self.object_exists(mouse_position,e_graphics.player_objects):
+                    e_graphics.player_objects.remove(self.selected_object)
 
 
     def object_exists(self,mouse_position,game_objects):
