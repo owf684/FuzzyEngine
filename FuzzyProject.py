@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import filedialog, simpledialog
+from tkinter import messagebox
 import shutil
 import json
 import subprocess
@@ -11,11 +12,19 @@ selected_directory = ""
 
 def open_directory_dialog():
     global selected_directory
+
     # Ask the user to select a directory
     selected_directory = filedialog.askdirectory()
 
+    # write work space to project_file
+    with open("./project_file.json", "r") as file:
+        project_file = json.load(file)
+    project_file['work_space'] = selected_directory
+    with open("./project_file.json", "w") as file:
+        json.dump(project_file, file)
+
     # Display the selected directory in the label
-    label.config(text="Selected Directory: " + selected_directory)
+    label.config(text="work space: " + selected_directory)
 
     # Update the contents of the Listbox with the selected directory
     update_listbox(selected_directory)
@@ -28,17 +37,19 @@ def open_project():
     if selected_project_index:
         selected_project = listbox.get(selected_project_index)
         selected_project_directory = os.path.join(label.cget("text").split(": ")[1], selected_project)
-        print("Selected Project Directory:", selected_project_directory)
-        project_file = {
-            'current_project' : selected_project_directory
-        }
+
+        with open('./project_file.json', 'r') as file:
+            l_project_file = json.load(file)
+
+        l_project_file['current_project'] = selected_project_directory
+
         with open('./project_file.json', 'w') as file:
-            json.dump(project_file, file)
+            json.dump(l_project_file, file)
 
         subprocess.run(['python', 'main.py'])
 
     else:
-        print("No project selected.")
+        messagebox.showerror("Error", "Please select a project.")
 
 
 def create_fzy_file():
@@ -54,7 +65,6 @@ def create_fzy_file():
                     selected_directory + "/" + project_name + ".fzy/GameData",
                     dirs_exist_ok=True)
 
-    print(f"New .fzy file created at: {new_fzy_file}")
     update_listbox(selected_directory)
 
 
@@ -112,5 +122,16 @@ open_project_button.pack(side=tk.LEFT, pady=20, padx=20)
 create_fzy_file_button = tk.Button(root, text="Create .fzy File", command=create_fzy_file)
 create_fzy_file_button.pack(side=tk.LEFT, pady=20, padx=20)
 
+# read project_file
+with open("./project_file.json", 'r') as file:
+    g_project_file = json.load(file)
+
+try:
+
+    update_listbox(g_project_file['work_space'])
+    # Display the selected directory in the label
+    label.config(text="work space: " + g_project_file['work_space'])
+except:
+    label.config(text='work_space: None Found')
 # Run the Tkinter event loop
 root.mainloop()
