@@ -154,9 +154,9 @@ class ButtonSignal:
             
             case 'add':
                 level_editor.c_object.find_sprites()
-                level_editor.c_object.trigger_object_prompt = True
+                level_editor.c_object.f_object_component.render = True
                 level_editor.object_placer.place_enabled = False
-            
+
             case 'add-scene':
                 level_editor.c_scene.add_scene()
 
@@ -180,8 +180,7 @@ class ButtonSignal:
             case 'cancel-save':
                 level_editor.c_object.cancel_prompt()
                 level_editor.object_placer.place_enabled = True
-            case 'file-dialog':
-                level_editor.c_object.get_directory()
+
             case 'remove-object':
                 if level_editor.c_object_creator.destroy_selected_object():
                     level_editor.c_object_creator.reset()

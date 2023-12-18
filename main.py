@@ -58,7 +58,9 @@ clock = pygame.time.Clock()
 pygame_events = None
 delta_t = 0
 FPS = 120
-
+events = {'TextInput': None,
+          'KeyDown': None,
+          'MouseWheel': None}
 # main game loop
 running = True
 
@@ -69,14 +71,17 @@ while running:
             running = False
         if event.type == pygame.TEXTINPUT:
             e_level_editor.text_box_ui.event = event
+            events['TextInput'] = event
         if event.type == pygame.KEYDOWN:
             e_level_editor.text_box_ui.event = event
+            events['KeyDown'] = event
         if event.type == pygame.MOUSEWHEEL:
             e_level_editor.c_scene.event = event
             e_level_editor.attribute_ui.event = event
+            events['MouseWheel'] = event
     input_dict = e_inputs.update()
 
-    e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor)
+    e_graphics.update(GameObjectsList=l_game_objects, LevelEditor=e_level_editor, Events=events)
 
     if not e_level_editor.edit:
 
@@ -95,6 +100,11 @@ while running:
     e_scroll.scroll_objects(GameObjects=l_game_objects, LevelEditor=e_level_editor, InputDict=input_dict)
 
     e_level_editor.update(InputDict=input_dict, GameObjects=l_game_objects, GraphicsEngine=e_graphics)
+
+    events = {'TextInput': None,
+              'KeyDown': None,
+              'MouseWheel': None}
+
     delta_t = clock.tick(FPS) / 1000
 
 pygame.quit()

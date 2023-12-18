@@ -138,9 +138,7 @@ class LevelEditor:
         self.object_placer.update(InputDict=d_inputs, GameObjects=game_objects, ALevelEditor=self,
                                   GraphicsEngine=e_graphics)
 
-        self.c_object.update(TextBoxes=self.text_box_ui.l_text_boxes, Buttons=self.l_button_ui_elements,
-                             InputDict=d_inputs,
-                             ComboBoxes=self.l_object_component_cb_elements)
+        self.c_object.update(LevelEditor=self)
         self.text_box_ui.get_input(InputDict=d_inputs)
 
     def setup_button_ui(self):

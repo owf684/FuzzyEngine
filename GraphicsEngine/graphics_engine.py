@@ -44,6 +44,7 @@ class GraphicsEngine:
 
         # get variables
         e_level_editor = kwargs['LevelEditor']
+        events = kwargs['Events']
         self.screen.fill((92, 148, 252))
 
         if self.clear_render_buffer:
@@ -73,7 +74,7 @@ class GraphicsEngine:
 
         e_level_editor.attribute_ui.draw_attributes(self.screen)
 
-        e_level_editor.c_object.draw_object_prompt(self.screen)
+        #e_level_editor.c_object.draw_object_prompt(self.screen)
 
         for key, button in e_level_editor.l_button_ui_elements.items():
             if button.render:
@@ -85,6 +86,9 @@ class GraphicsEngine:
         for key, cb in reversed(e_level_editor.l_object_component_cb_elements.items()):
             if cb.render:
                 cb.draw_combo_box(self.screen)
+
+        if e_level_editor.c_object.f_object_component.render:
+            e_level_editor.c_object.f_object_component.update(self.screen, events)
         pygame.display.flip()
 
     def load_render_buffer(self, l_objects):
