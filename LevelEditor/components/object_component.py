@@ -9,177 +9,189 @@ import object_template
 import text_box_ui_component
 import combo_box_ui_component
 from vector import Vector
-
+from form import Form
 
 class ObjectComponent:
 
     def __init__(self):
-        self.trigger_object_prompt = False
+        # read in current project directory
+        with open('./project_file.json', 'r') as file:
+            self.project_file = json.load(file)
+
         self.display_info = pygame.display.Info()
         self.display_width = int(self.display_info.current_w * .8)
         self.display_height = int(self.display_info.current_h * .8)
-        self.l_text_boxes = list()
-        self.add_text_boxes = False
         self.font = pygame.font.Font(None, 24)
         self.font_color = (255, 255, 255)
-        self.l_button_ui_elements = list()
-        self.directory_path = None
 
-        self.skip_update = False
-        self.skip_update_2 = False
-        self.current_cb = 0
-        self.current_cb_2 = 0
         self.generic_1_sprite_is_sheet = False
         self.generic_2_sprite_is_sheet = False
         self.generic_3_sprite_is_sheet = False
         self.generic_4_sprite_is_sheet = False
-        self.sprite_dir_combo_box = list()
-        self.current_sprite_cb = list()
-        self.sprite_cb = list()
-        self.file_cb_collection = {}
-        self.l_combo_box_ui_elements = {}
-        self.d_inputs = None
-        self.class_name_value = ''
+        self.file_collection = {}
 
-        # read in current project directory 
-        with open('./project_file.json', 'r') as file:
-            self.project_file = json.load(file)
-        print(self.project_file)
+        self.selected_index = {'current_sprite_dir': -1,
+                               'generic_sprite_1_dir': -1,
+                               'generic_sprite_2_dir': -1,
+                               'generic_sprite_3_dir': -1,
+                               'generic_sprite_4_dir': -1}
+
+        self.f_object_component = Form(25, 10, self.display_width * .95, self.display_height * .95)
+        self.setup_object_component_form()
+        self.level_editor = None
+    def setup_object_component_form(self):
+
+        # Setting up Labels
+        y_pos = 50
+        y_increment = 75
+        # add 4 labels
+        label_text = {'l1': 'Current Sprite',
+                      'l2': 'Generic Sprite 1',
+                      'l3': 'Generic Sprite 2',
+                      'l4': 'Generic Sprite 3',
+                      'l5': 'Generic Sprite 4',
+                      'l6': 'Object Class',
+                      'l7': 'Object Category'}
+
+        for key, label in label_text.items():
+            self.f_object_component.add_label(key, label, 100, y_pos, 24)
+            y_pos += y_increment
+
+        # Setting up sprite directory combo boxes
+        y_pos = 45
+        combo_boxes = {'current_sprite_dir': 'None',
+                       'generic_sprite_1_dir': 'None',
+                       'generic_sprite_2_dir': 'None',
+                       'generic_sprite_3_dir': 'None',
+                       'generic_sprite_4_dir': 'None'}
+        for key, combo in combo_boxes.items():
+            self.f_object_component.add_combo_box(key,300,y_pos,200,25)
+            self.f_object_component.combo_boxes[key].add_entry(combo)
+            self.f_object_component.combo_boxes[key].connect(self.update_form_combo_boxes, True)
+            y_pos += y_increment
+
+
+        # Setting up sprite file combo boxes
+        y_pos = 45
+        combo_boxes = {'current_sprite_file': 'None',
+                       'generic_sprite_1_file': 'None',
+                       'generic_sprite_2_file': 'None',
+                       'generic_sprite_3_file': 'None',
+                       'generic_sprite_4_file': 'None'}
+        for key, combo in combo_boxes.items():
+            self.f_object_component.add_combo_box(key,550,y_pos,200,25)
+            self.f_object_component.combo_boxes[key].add_entry(combo)
+            y_pos += y_increment
+
+
+        # Setting up sprite sheet switches
+        y_pos = 45 + y_increment
+        switches = {'generic_switch_1': 'sprite sheet',
+                    'generic_switch_2': 'sprite sheet',
+                    'generic_switch_3': 'sprite sheet',
+                    'generic_switch_4': 'sprite sheet'}
+        for key, switches in switches.items():
+            self.f_object_component.add_switch(key,switches,800,y_pos,100, 25)
+            y_pos += y_increment
+
+        # Setting up object class entry
+        y_pos = 45 + y_increment*5
+        self.f_object_component.add_entry('object_class',300,y_pos, 200, 25,18)
+
+        # Setting up object category combo box
+        y_pos = 45 + y_increment*6
+        self.f_object_component.add_combo_box('object_category',300,y_pos, 200, 25)
+        self.f_object_component.combo_boxes['object_category'].add_entry('environment_object')
+        self.f_object_component.combo_boxes['object_category'].add_entry('player_object')
+        self.f_object_component.combo_boxes['object_category'].add_entry('item_object')
+        self.f_object_component.combo_boxes['object_category'].add_entry('scene_object')
+        self.f_object_component.combo_boxes['object_category'].add_entry('enemy_object')
+
+        # Setting up Save Button
+        y_pos = 45 + y_increment*6
+        self.f_object_component.add_button('save_object', 'SAVE', 550, y_pos, 200, 50)
+        self.f_object_component.buttons['save_object'].font_size = 24
+        self.f_object_component.buttons['save_object'].font = pygame.font.Font(None, 24)
+        self.f_object_component.buttons['save_object'].set_text('SAVE')
+        self.f_object_component.buttons['save_object'].connect(self.save_object)
+
+        # Setting up Cancel Button
+        y_pos = 45 + y_increment*6
+        self.f_object_component.add_button('cancel', 'CANCEL', 800, y_pos, 200, 50)
+        self.f_object_component.buttons['cancel'].font_size = 24
+        self.f_object_component.buttons['cancel'].font = pygame.font.Font(None, 24)
+        self.f_object_component.buttons['cancel'].set_text('CANCEL')
+        self.f_object_component.buttons['cancel'].connect(self.cancel)
+
+        # Initialize combo box entries
+        self.find_sprites()
+        #self.find_sprites_new()
     def update(self, **kwargs):
-        self.l_text_boxes = kwargs['TextBoxes']
-        self.l_button_ui_elements = kwargs['Buttons']
-        self.l_combo_box_ui_elements = kwargs['ComboBoxes']
-        self.d_inputs = kwargs['InputDict']
+        self.level_editor = kwargs['LevelEditor']
+        # self.update_form_combo_boxes()
+        self.update_sprite_sheet_status()
 
-    def draw_object_prompt(self, screen):
+    def update_form_combo_boxes(self, **kwargs):
 
-        if self.trigger_object_prompt:
+        dir_cb_key = kwargs['name']
 
-            pygame.draw.rect(screen, (45, 45, 45),
-                             (self.display_width * .2, self.display_height / 8, 700, self.display_height + 50))
+        if dir_cb_key is not None:
 
-            current_sprite = self.font.render("Current Sprite:", 1, self.font_color)
-            screen.blit(current_sprite, (self.display_width * .2 + 50, self.display_height / 8 + 64))
+            selected_dir = self.f_object_component.combo_boxes[dir_cb_key].get_value()
+            file_cb_key = dir_cb_key[:dir_cb_key.index('dir')] + 'file'
 
-            generic_sprite_1 = self.font.render("Generic Sprite 1:", 1, self.font_color)
-            screen.blit(generic_sprite_1, (self.display_width * .2 + 50, self.display_height / 8 + 128))
+            if selected_dir != 'None':
+                self.f_object_component.combo_boxes[file_cb_key].reset()
+                for entry in self.file_collection[selected_dir]:
+                    self.f_object_component.combo_boxes[file_cb_key].add_entry(entry)
 
-            generic_sprite_2 = self.font.render("Generic Sprite 2:", 1, self.font_color)
-            screen.blit(generic_sprite_2, (self.display_width * .2 + 50, self.display_height / 8 + 192))
+    def update_sprite_sheet_status(self):
+        self.generic_1_sprite_is_sheet = self.f_object_component.switches['generic_switch_1'].is_toggled()
+        self.generic_2_sprite_is_sheet = self.f_object_component.switches['generic_switch_2'].is_toggled()
+        self.generic_3_sprite_is_sheet = self.f_object_component.switches['generic_switch_3'].is_toggled()
+        self.generic_4_sprite_is_sheet = self.f_object_component.switches['generic_switch_4'].is_toggled()
 
-            generic_sprite_3 = self.font.render("Generic Sprite 3:", 1, self.font_color)
-            screen.blit(generic_sprite_3, (self.display_width * .2 + 50, self.display_height / 8 + 256))
-
-            generic_sprite_4 = self.font.render("Generic Sprite 4:", 1, self.font_color)
-            screen.blit(generic_sprite_4, (self.display_width * .2 + 50, self.display_height / 8 + 320))
-
-            object_file = self.font.render("Object Class:", 1, self.font_color)
-            screen.blit(object_file, (self.display_width * .2 + 50, self.display_height / 8 + 384))
-
-            object_class = self.font.render("Object Category:", 1, self.font_color)
-            screen.blit(object_class, (self.display_width * .2 + 50, self.display_height / 8 + 448))
-
-            self.l_button_ui_elements['save-object'].render = True
-            self.l_button_ui_elements['cancel-save'].render = True
-            self.l_button_ui_elements['generic_1_sprite_switch'].render = True
-            self.l_button_ui_elements['generic_2_sprite_switch'].render = True
-            self.l_button_ui_elements['generic_3_sprite_switch'].render = True
-            self.l_button_ui_elements['generic_4_sprite_switch'].render = True
-
-            if not self.add_text_boxes:
-                textBox2 = text_box_ui_component.TextBox(200, 25, Vector(self.display_width * .2 + 250,
-                                                                         self.display_height / 8 + 384))
-                textBox2.userInput = self.class_name_value
-                self.l_text_boxes.append(textBox2)
-                self.add_text_boxes = True
-
-            for key, value in self.l_combo_box_ui_elements.items():
-                if 'ocf' in key:
-                    self.l_combo_box_ui_elements[key].render = True
-
-                    if 'dir' in key:
-                        selected_index = self.l_combo_box_ui_elements[key].selected_index
-                        file_key = key.replace('dir', 'file')
-                        try:
-
-                            self.l_combo_box_ui_elements[file_key] = self.file_cb_collection[key][selected_index]
-                        except:
-                            None
-                    value.update(InputDict=self.d_inputs)
 
     def find_sprites(self):
+        self.file_collection.clear()
+        for key, cb in self.f_object_component.combo_boxes.items():
+            cb.reset()
 
-        for key, cb in self.l_combo_box_ui_elements.items():
-            if 'ocf' in key:
+        # walk through GameData directory
+        for root, dirs, files in os.walk(self.project_file['current_project'] + '/GameData/Assets/'):
+            game_data_index = root.index('/GameData')
+            game_data_path = root[game_data_index:]
+            png_files = list()
+            for pngs in files:
+                if 'png' in pngs:
+                    png_files.append(pngs)
 
-                if 'dir' in key or 'file' in key:
-                    cb.reset()
+            if len(png_files) > 0:
+                self.file_collection[game_data_path] = png_files
+        for key, cb in self.f_object_component.combo_boxes.items():
+            if 'dir' in key:
+                for key, dir in self.file_collection.items():
+                    cb.add_entry(key)
 
-        self.file_cb_collection.clear()
-        y_pos = 64
-
-        for key, cb in self.l_combo_box_ui_elements.items():  # self.sprite_dir_combo_box:
-            new_cb = list()
-
-            if 'ocf' in key and 'dir' in key:
-
-                for root, dirs, files in os.walk(self.project_file['current_project']+"/GameData/Assets/"):
-                    if len(root) > 0:
-                        game_data_index = root.index('/GameData')
-                        game_data_path = root[game_data_index:]
-                        cb.add_entry(game_data_path)
-
-                        new_cb.append(combo_box_ui_component.ComboBoxUIComponent(200, 25))
-                        new_cb[-1].set_position(Vector(self.display_width * .2 + 450, self.display_height / 8 + y_pos))
-                        new_cb[-1].add_entry('None')
-                    for pngs in files:
-                        if ".png" in pngs:
-                            new_cb[-1].add_entry(pngs, directory=root[18:])
-
-                    if len(new_cb) > 0 and len(new_cb[-1].entries) == 1:
-                        new_cb.pop()
-                        cb.y_gap -= cb.height
-                        cb.entries.pop()
-
-                self.file_cb_collection[key] = new_cb
-
-                y_pos += 64
-
-    def cancel_prompt(self):
-        self.add_text_boxes = False
-        self.trigger_object_prompt = False
-        self.l_button_ui_elements['save-object'].render = False
-        self.l_button_ui_elements['cancel-save'].render = False
-        self.l_button_ui_elements['file-dialog'].render = False
-        self.l_button_ui_elements['generic_1_sprite_switch'].render = False
-        self.l_button_ui_elements['generic_2_sprite_switch'].render = False
-        self.l_button_ui_elements['generic_3_sprite_switch'].render = False
-        self.l_button_ui_elements['generic_4_sprite_switch'].render = False
-
-        for key, value in self.l_combo_box_ui_elements.items():
-            if 'ocf' in key:
-                self.l_combo_box_ui_elements[key].render = False
-
-        self.class_name_value = ''
-        self.current_sprite_cb.clear()
-
-        self.l_text_boxes.clear()
+    def cancel(self):
+        self.f_object_component.render = False
+        self.level_editor.object_placer.place_enabled = True
 
     def save_object(self):
 
-        current_sprite = self.l_combo_box_ui_elements['current_sprite_dir_cb_ocf'].get_value() + "/" + \
-                         self.l_combo_box_ui_elements['current_sprite_file_cb_ocf'].get_value()
-        generic_sprite_1 = self.l_combo_box_ui_elements['generic_sprite_1_dir_cb_ocf'].get_value() + "/" + \
-                           self.l_combo_box_ui_elements['generic_sprite_1_file_cb_ocf'].get_value()
-        generic_sprite_2 = self.l_combo_box_ui_elements['generic_sprite_2_dir_cb_ocf'].get_value() + "/" + \
-                           self.l_combo_box_ui_elements['generic_sprite_2_file_cb_ocf'].get_value()
-        generic_sprite_3 = self.l_combo_box_ui_elements['generic_sprite_3_dir_cb_ocf'].get_value() + "/" + \
-                           self.l_combo_box_ui_elements['generic_sprite_3_file_cb_ocf'].get_value()
-        generic_sprite_4 = self.l_combo_box_ui_elements['generic_sprite_4_dir_cb_ocf'].get_value() + "/" + \
-                           self.l_combo_box_ui_elements['generic_sprite_4_file_cb_ocf'].get_value()
+        current_sprite = self.f_object_component.combo_boxes['current_sprite_dir'].get_value()  + \
+                         self.f_object_component.combo_boxes['current_sprite_file'].get_value()
+        generic_sprite_1 = self.f_object_component.combo_boxes['generic_sprite_1_dir'].get_value()  + \
+                           self.f_object_component.combo_boxes['generic_sprite_1_file'].get_value()
+        generic_sprite_2 = self.f_object_component.combo_boxes['generic_sprite_2_dir'].get_value()  + \
+                           self.f_object_component.combo_boxes['generic_sprite_2_file'].get_value()
+        generic_sprite_3 = self.f_object_component.combo_boxes['generic_sprite_3_dir'].get_value()  + \
+                           self.f_object_component.combo_boxes['generic_sprite_3_file'].get_value()
+        generic_sprite_4 = self.f_object_component.combo_boxes['generic_sprite_4_dir'].get_value()  + \
+                           self.f_object_component.combo_boxes['generic_sprite_4_file'].get_value()
 
-        object_class = self.l_text_boxes[0].userInput
-        object_category = self.l_combo_box_ui_elements['category_combo_box_ocf'].get_value()
+        object_class = self.f_object_component.entries['object_class'].get_text()
+        object_category = self.f_object_component.combo_boxes['object_category'].get_value()
 
         file_directory = "/GameData/" + object_template.object_categories[object_category] + 's'
         class_name = ''
@@ -221,19 +233,20 @@ class ObjectComponent:
                                         object_template.object_categories[object_category] + "):"
 
         if 'None' not in current_sprite:
-            file_template['current_sprite'] = "self.current_sprite.create_sprite(project_dir + '" + current_sprite + "')"
+            file_template[
+                'current_sprite'] = "self.current_sprite.create_sprite(project_dir + '" + current_sprite + "')"
         else:
             file_template.pop('current_sprite')
 
         if 'None' not in generic_sprite_1:
             if self.generic_1_sprite_is_sheet:
                 file_template['generic_sprite_1'] = (
-                    "self.generic_sprite_1.create_sprite_sheet(project_dir + " + generic_sprite_1 + '"', 1,
+                    "self.generic_sprite_1.create_sprite_sheet(project_dir + '" + generic_sprite_1, 1,
                     Vector(32, 32))
 
             else:
                 file_template[
-                    'generic_sprite_1'] = "self.generic_sprite_1.create_sprite(project_dir + '" + generic_sprite_1
+                    'generic_sprite_1'] = "self.generic_sprite_1.create_sprite(project_dir + '" + generic_sprite_1 + '")'
                 file_template.pop('generic_sprite_1_position')
                 file_template.pop("generic_sprite_1_rect")
         else:
@@ -288,7 +301,8 @@ class ObjectComponent:
             file_template.pop('generic_sprite_4_position')
             file_template.pop("generic_sprite_4_rect")
 
-        file_template['object_json_file'] = "self.save_state.object_json_file='" + "/GameData/jsons/" + file_name.rstrip(
+        file_template[
+            'object_json_file'] = "self.save_state.object_json_file='" + "/GameData/jsons/" + file_name.rstrip(
             '.py') + ".json'"
 
         file_template['object_return'] = "return " + object_class + "()"
@@ -302,10 +316,15 @@ class ObjectComponent:
             "object_class": object_class,
             "object_category": object_category
         }
-        with open(self.project_file['current_project']+"/GameData/jsons/" + file_name.rstrip('.py') + ".json", 'w') as json_file:
+        with open(self.project_file['current_project'] + "/GameData/jsons/" + file_name.rstrip('.py') + ".json",
+                  'w') as json_file:
             json.dump(object_json, json_file)
 
-        self.cancel_prompt()
 
-    def get_directory(self):
-        None
+        self.f_object_component.render = False
+
+        self.level_editor.c_object_creator.reset()
+        self.level_editor.c_object_creator.create_json_list()
+        self.level_editor.c_object_creator.create_objects_dict()
+        self.level_editor.c_object_creator.organize_objects()
+        self.level_editor.object_container_ui.init_ui(self.level_editor.c_object_creator)
