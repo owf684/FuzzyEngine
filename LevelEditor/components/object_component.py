@@ -155,7 +155,8 @@ class ObjectComponent:
     def find_sprites(self):
         self.file_collection.clear()
         for key, cb in self.f_object_component.combo_boxes.items():
-            cb.reset()
+            if 'dir' in key or 'file' in key:
+                cb.reset()
 
         # walk through GameData directory
         for root, dirs, files in os.walk(self.project_file['current_project'] + '/GameData/Assets/'):
