@@ -6,9 +6,10 @@ import shutil
 import json
 import subprocess
 
+global selected_project_directory
 selected_project_directory = ""  # Variable to store the selected project directory
+global selected_directory
 selected_directory = ""
-
 
 def open_directory_dialog():
     global selected_directory
@@ -53,6 +54,7 @@ def open_project():
 
 
 def create_fzy_file():
+    global selected_directory
     new_fzy_file = os.path.join(selected_directory, "new_project.fzy")
     # Ask the user for the project name
     project_name = simpledialog.askstring("Project Name", "Enter the project name:")
@@ -69,6 +71,8 @@ def create_fzy_file():
 
 
 def update_listbox(directory):
+    global selected_directory
+    selected_directory = directory
     # Clear the existing items in the Listbox
     listbox.delete(0, tk.END)
 
