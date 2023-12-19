@@ -1,22 +1,12 @@
 import pygame
-import InputEngine
-import GraphicsEngine
-import PhysicsEngine
-import PlayerEngine
 import LevelEditor
-import SpriteEngine
-import CollisionEngine
-import AnimationEngine
-import ScrollEngine
-import AudioEngine
-import EnemyEngine
-import EnvironmentEngine
-import ItemEngine
+from Engine import AnimationEngine, AudioEngine, EnemyEngine, EnvironmentEngine, CollisionEngine, InputEngine, \
+    GraphicsEngine, PlayerEngine, PhysicsEngine, ScrollEngine, SpriteEngine, ItemEngine
 
 
 def main_loop():
     '''Hungarian Notation for type hinting
-    e = engine object
+    e = Engine object
     l = list
     o = object
     d = dictionary
