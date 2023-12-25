@@ -47,14 +47,14 @@ class GraphicsEngine:
         events = kwargs['Events']
         self.screen.fill((92, 148, 252))
 
-        if self.clear_render_buffer:
-            self.render_buffer.clear()
-            self.item_objects.clear()
-            self.enemy_objects.clear()
-            self.environment_objects.clear()
-            self.player_objects.clear()
-            self.scene_objects.clear()
-            self.clear_render_buffer = False
+        #if self.clear_render_buffer:
+        self.render_buffer.clear()
+        self.item_objects.clear()
+        self.enemy_objects.clear()
+        self.environment_objects.clear()
+        self.player_objects.clear()
+        self.scene_objects.clear()
+        # self.clear_render_buffer = False
 
         for key, value in kwargs.items():
             if 'ObjectsList' in key:
@@ -97,26 +97,27 @@ class GraphicsEngine:
             image = objects.current_sprite.image
             if image is not None:
                 if (
-                        -image.get_width() - self.cushion < objects.physics.position.x < self.screen_width * 0.8 + image.get_width() + self.cushion
-                        or - image.get_width() - self.cushion < objects.physics.initial_position.x < self.screen_width * 0.8 + image.get_width() + self.cushion) \
+                        ((-image.get_width() - self.cushion < objects.physics.position.x < self.screen_width * 0.8 + image.get_width() + self.cushion) and objects.physics.pause)
+                        or ((- image.get_width() - self.cushion < objects.physics.initial_position.x < self.screen_width * 0.8 + image.get_width() + self.cushion) ) and not objects.physics.pause) \
                         and -image.get_height() < objects.physics.position.y < self.screen_height + image.get_height():
 
-                    if not objects.current_sprite.is_rendered:
-                        objects.current_sprite.is_rendered = True
 
-                        if isinstance(objects, enemy_object.EnemyObject):
-                            self.enemy_objects.append(objects)
-                        elif isinstance(objects, environment_object.EnvironmentObject):
-                            self.environment_objects.append(objects)
-                        elif isinstance(objects, player_object.PlayerObject):
-                            self.player_objects.append(objects)
-                        elif isinstance(objects, item_object.ItemObject):
-                            self.item_objects.append(objects)
-                        elif isinstance(objects, scene_object.SceneObject):
-                            self.scene_objects.append(objects)
+                    objects.current_sprite.is_rendered = True
 
-                        self.render_buffer.append(objects)
-                    elif objects.current_sprite.is_rendered and objects.destroy:
+                    if isinstance(objects, enemy_object.EnemyObject):
+                        self.enemy_objects.append(objects)
+                    elif isinstance(objects, environment_object.EnvironmentObject):
+                        self.environment_objects.append(objects)
+                    elif isinstance(objects, player_object.PlayerObject):
+                        self.player_objects.append(objects)
+                    elif isinstance(objects, item_object.ItemObject):
+                        self.item_objects.append(objects)
+                    elif isinstance(objects, scene_object.SceneObject):
+                        self.scene_objects.append(objects)
+
+                    self.render_buffer.append(objects)
+
+                    if objects.current_sprite.is_rendered and objects.destroy:
 
                         if isinstance(objects, enemy_object.EnemyObject):
                             self.enemy_objects.remove(objects)
@@ -131,22 +132,7 @@ class GraphicsEngine:
 
                         self.render_buffer.remove(objects)
                         l_objects.remove(objects)
-                else:
 
-                    objects.current_sprite.is_rendered = False
-                    if objects in self.render_buffer:
-                        self.render_buffer.remove(objects)
-
-                        if isinstance(objects, enemy_object.EnemyObject):
-                            self.enemy_objects.remove(objects)
-                        elif isinstance(objects, environment_object.EnvironmentObject):
-                            self.environment_objects.remove(objects)
-                        elif isinstance(objects, player_object.PlayerObject):
-                            self.player_objects.remove(objects)
-                        elif isinstance(objects, item_object.ItemObject):
-                            self.item_objects.remove(objects)
-                        elif isinstance(objects, scene_object.SceneObject):
-                            self.scene_objects.remove(objects)
 
     def draw_objects(self):
 
