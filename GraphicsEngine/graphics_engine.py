@@ -32,6 +32,15 @@ class GraphicsEngine:
         self.button_objects = None
         self.draw_colliders = True
 
+        # collision buffer
+        self.resolution = 4
+        self.padding = 64
+        self.spacing = self.screen_width / self.resolution
+        self.collision_buffer = {}
+        for i in range(self.resolution):
+            self.collision_buffer[i * self.spacing] = list()
+
+
         self.scene_objects = list()
         self.enemy_objects = list()
         self.player_objects = list()
@@ -47,14 +56,14 @@ class GraphicsEngine:
         events = kwargs['Events']
         self.screen.fill((92, 148, 252))
 
-        if self.clear_render_buffer:
-            self.render_buffer.clear()
-            self.item_objects.clear()
-            self.enemy_objects.clear()
-            self.environment_objects.clear()
-            self.player_objects.clear()
-            self.scene_objects.clear()
-            self.clear_render_buffer = False
+        # empty our buffers
+        self.clear_collision_buffer()
+        self.render_buffer.clear()
+        self.item_objects.clear()
+        self.enemy_objects.clear()
+        self.environment_objects.clear()
+        self.player_objects.clear()
+        self.scene_objects.clear()
 
         for key, value in kwargs.items():
             if 'ObjectsList' in key:
@@ -91,6 +100,17 @@ class GraphicsEngine:
             e_level_editor.c_object.f_object_component.update(self.screen, events)
         pygame.display.flip()
 
+    def clear_collision_buffer(self):
+        for i in range(self.resolution):
+            self.collision_buffer[i * self.spacing].clear()
+
+    def load_collision_buffer(self, objects):
+
+        for i in range(self.resolution):
+            if i * self.spacing - self.padding <= objects.physics.position.x <= (i + 1) * self.spacing + self.padding:
+                self.collision_buffer[i * self.spacing].append(objects)
+                break
+
     def load_render_buffer(self, l_objects):
 
         for objects in l_objects:
@@ -101,22 +121,22 @@ class GraphicsEngine:
                         or - image.get_width() - self.cushion < objects.physics.initial_position.x < self.screen_width * 0.8 + image.get_width() + self.cushion) \
                         and -image.get_height() < objects.physics.position.y < self.screen_height + image.get_height():
 
-                    if not objects.current_sprite.is_rendered:
-                        objects.current_sprite.is_rendered = True
+                    if isinstance(objects, enemy_object.EnemyObject):
+                        self.enemy_objects.append(objects)
+                    elif isinstance(objects, environment_object.EnvironmentObject):
+                        self.environment_objects.append(objects)
+                    elif isinstance(objects, player_object.PlayerObject):
+                        self.player_objects.append(objects)
+                    elif isinstance(objects, item_object.ItemObject):
+                        self.item_objects.append(objects)
+                    elif isinstance(objects, scene_object.SceneObject):
+                        self.scene_objects.append(objects)
 
-                        if isinstance(objects, enemy_object.EnemyObject):
-                            self.enemy_objects.append(objects)
-                        elif isinstance(objects, environment_object.EnvironmentObject):
-                            self.environment_objects.append(objects)
-                        elif isinstance(objects, player_object.PlayerObject):
-                            self.player_objects.append(objects)
-                        elif isinstance(objects, item_object.ItemObject):
-                            self.item_objects.append(objects)
-                        elif isinstance(objects, scene_object.SceneObject):
-                            self.scene_objects.append(objects)
+                    self.render_buffer.append(objects)
 
-                        self.render_buffer.append(objects)
-                    elif objects.current_sprite.is_rendered and objects.destroy:
+                    self.load_collision_buffer(objects)
+
+                    if objects.destroy:
 
                         if isinstance(objects, enemy_object.EnemyObject):
                             self.enemy_objects.remove(objects)
@@ -131,22 +151,7 @@ class GraphicsEngine:
 
                         self.render_buffer.remove(objects)
                         l_objects.remove(objects)
-                else:
 
-                    objects.current_sprite.is_rendered = False
-                    if objects in self.render_buffer:
-                        self.render_buffer.remove(objects)
-
-                        if isinstance(objects, enemy_object.EnemyObject):
-                            self.enemy_objects.remove(objects)
-                        elif isinstance(objects, environment_object.EnvironmentObject):
-                            self.environment_objects.remove(objects)
-                        elif isinstance(objects, player_object.PlayerObject):
-                            self.player_objects.remove(objects)
-                        elif isinstance(objects, item_object.ItemObject):
-                            self.item_objects.remove(objects)
-                        elif isinstance(objects, scene_object.SceneObject):
-                            self.scene_objects.remove(objects)
 
     def draw_objects(self):
 

@@ -11,30 +11,40 @@ class CollisionEngine:
 
     def update(self, **kwargs):
         current_object = kwargs['CurrentObject']
-        render_buffer = kwargs['RenderBuffer']
+        e_graphics = kwargs['GraphicsEngine']
         current_object.collider.reset()
-        for other in render_buffer:
-            if (current_object != other
-                and not isinstance(other, scene_object.SceneObject)
-                and not isinstance(current_object, scene_object.SceneObject)) \
-                    and not current_object.collider.all_off:
+        collision_buffer = None
 
-                if current_object.current_sprite.rect.colliderect(other.current_sprite.rect) \
-                        and not other.collider.pass_through:
+        collision_buffer = self.get_collision_buffer(current_object, e_graphics)
 
-                    if not current_object.collider.up_off:
-                        self.detect_up_collisions(current_object, other)
+        if collision_buffer is not None:
+            for other in collision_buffer:
+                self.detect_collisions(current_object, other)
 
-                    if not current_object.collider.right_off:
-                        self.detect_right_collisions(current_object, other)
+    def detect_collisions(self, current_object, other):
+        if (current_object != other
+            and not isinstance(other, scene_object.SceneObject)
+            and not isinstance(current_object, scene_object.SceneObject)) \
+                and not current_object.collider.all_off:
 
-                    if not current_object.collider.down_off:
-                        self.detect_down_collisions(current_object, other)
+            if current_object.current_sprite.rect.colliderect(other.current_sprite.rect) \
+                    and not other.collider.pass_through:
 
-                    if not current_object.collider.left_off:
-                        self.detect_left_collisions(current_object, other)
+                if not current_object.collider.up_off:
+                    self.detect_up_collisions(current_object, other)
 
+                if not current_object.collider.right_off:
+                    self.detect_right_collisions(current_object, other)
 
+                if not current_object.collider.down_off:
+                    self.detect_down_collisions(current_object, other)
+
+                if not current_object.collider.left_off:
+                    self.detect_left_collisions(current_object, other)
+    def get_collision_buffer(self, current_object, e_graphics):
+        for i in range(e_graphics.resolution):
+            if i * e_graphics.spacing - e_graphics.padding <= current_object.physics.position.x < (i + 1) * e_graphics.spacing + e_graphics.padding:
+                return e_graphics.collision_buffer[i * e_graphics.spacing]
     def detect_up_collisions(self, current_object, other):
         if current_object.current_sprite.rect.top < other.current_sprite.rect.bottom \
                 and current_object.current_sprite.rect.bottom > other.current_sprite.rect.bottom \
