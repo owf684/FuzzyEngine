@@ -75,7 +75,17 @@ def main_loop():
                 e_audio.update(GameObject=objects)
                 e_scroll.update(GameObject=objects)
 
-        e_scroll.scroll_objects(GameObjects=l_game_objects, LevelEditor=e_level_editor, InputDict=d_inputs)
+        for objects in e_graphics.render_buffer:
+            e_collision.update(GraphicsEngine=e_graphics, CurrentObject=objects)
+            e_physics.update(GameObject=objects, DeltaT=delta_t)
+            e_sprite.update(GameObject=objects, DeltaT=delta_t)
+            e_player.update(InputDict=input_dict, PlayerObject=objects, DeltaT=delta_t)
+            e_enemy.update(GameObject=objects, ScrollEngine=e_scroll)
+            e_animation.update(GameObject=objects)
+            e_environment.update(GameObject=objects)
+            e_item.update(GameObject=objects)
+            e_audio.update(GameObject=objects)
+            e_scroll.update(GameObject=objects)
 
         e_level_editor.update(InputDict=d_inputs, GameObjects=l_game_objects, GraphicsEngine=e_graphics)
 
